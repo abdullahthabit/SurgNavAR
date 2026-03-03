@@ -1,0 +1,7 @@
+config_DemoApplication.json
+marker_tracking/circlesMarker2mm.png
+marker_tracking/PatientMarker.jpg
+marker_tracking/PointerMarker.png
+patient_models/head.obj
+patient_models/ventricles.obj
+registration/evdRegistrationPoints.txt

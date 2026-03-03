@@ -1,0 +1,376 @@
+{
+    "unityConfig": {
+        "patientModel": {
+            "scale": 0.0010000000474974514,
+            "models": [
+                {
+                    "fileName": "head.obj",
+                    "showModel": true,
+                    "material": "transparent",
+                    "color": "1D0034E0"
+                },
+                {
+                    "fileName": "ventricles.obj",
+                    "showModel": true,
+                    "material": "transparent",
+                    "color": "4D4A2000"
+                }
+            ],
+            "distFeedbackMenuPosition": {
+                "x": 0.07461129873991013,
+                "y": -0.06623037904500961,
+                "z": 0.7335095405578613
+            },
+            "preopPlans": [
+                {
+                    "trajectoryName": "insertion1",
+                    "showTrajectory": true,
+                    "material": "opaque",
+                    "color": "E625C6FF",
+                    "entryPoint": {
+                        "x": -37.0,
+                        "y": -186.5,
+                        "z": -746.2000122070313
+                    },
+                    "exitPoint": {
+                        "x": 31.696149826049806,
+                        "y": -116.50669860839844,
+                        "z": -837.3671264648438
+                    }
+                },
+                {
+                    "trajectoryName": "insertion2",
+                    "showTrajectory": true,
+                    "material": "opaque",
+                    "color": "E625C6FF",
+                    "entryPoint": {
+                        "x": -25.600000381469728,
+                        "y": -185.39999389648438,
+                        "z": -740.2000122070313
+                    },
+                    "exitPoint": {
+                        "x": 36.701961517333987,
+                        "y": -123.50489807128906,
+                        "z": -841.27978515625
+                    }
+                },
+                {
+                    "trajectoryName": "insertion3",
+                    "showTrajectory": true,
+                    "material": "opaque",
+                    "color": "E625C6FF",
+                    "entryPoint": {
+                        "x": -25.600000381469728,
+                        "y": -185.39999389648438,
+                        "z": -740.2000122070313
+                    },
+                    "exitPoint": {
+                        "x": 19.994129180908204,
+                        "y": -104.56340026855469,
+                        "z": -835.8909301757813
+                    }
+                },
+                {
+                    "trajectoryName": "insertion4",
+                    "showTrajectory": true,
+                    "material": "opaque",
+                    "color": "E625C6FF",
+                    "entryPoint": {
+                        "x": -20.5,
+                        "y": -179.5,
+                        "z": -738.5999755859375
+                    },
+                    "exitPoint": {
+                        "x": 38.4692497253418,
+                        "y": -109.3759994506836,
+                        "z": -836.246826171875
+                    }
+                },
+                {
+                    "trajectoryName": "insertion5",
+                    "showTrajectory": true,
+                    "material": "opaque",
+                    "color": "E625C6FF",
+                    "entryPoint": {
+                        "x": -26.469999313354493,
+                        "y": -174.80999755859376,
+                        "z": -748.2899780273438
+                    },
+                    "exitPoint": {
+                        "x": 39.60346984863281,
+                        "y": -98.94867706298828,
+                        "z": -836.6586303710938
+                    }
+                },
+                {
+                    "trajectoryName": "insertion6",
+                    "showTrajectory": true,
+                    "material": "opaque",
+                    "color": "E625C6FF",
+                    "entryPoint": {
+                        "x": -56.16999816894531,
+                        "y": -3.6600000858306886,
+                        "z": -861.27001953125
+                    },
+                    "exitPoint": {
+                        "x": 38.048038482666019,
+                        "y": -96.0037612915039,
+                        "z": -838.351806640625
+                    }
+                },
+                {
+                    "trajectoryName": "insertion7",
+                    "showTrajectory": true,
+                    "material": "opaque",
+                    "color": "E625C6FF",
+                    "entryPoint": {
+                        "x": -56.38999938964844,
+                        "y": -7.449999809265137,
+                        "z": -847.9199829101563
+                    },
+                    "exitPoint": {
+                        "x": 29.745540618896486,
+                        "y": -109.25669860839844,
+                        "z": -835.848388671875
+                    }
+                },
+                {
+                    "trajectoryName": "insertion8",
+                    "showTrajectory": true,
+                    "material": "opaque",
+                    "color": "E625C6FF",
+                    "entryPoint": {
+                        "x": -62.06999969482422,
+                        "y": -13.300000190734864,
+                        "z": -856.5700073242188
+                    },
+                    "exitPoint": {
+                        "x": 18.738399505615236,
+                        "y": -118.55259704589844,
+                        "z": -838.6381225585938
+                    }
+                },
+                {
+                    "trajectoryName": "insertion9",
+                    "showTrajectory": true,
+                    "material": "opaque",
+                    "color": "E625C6FF",
+                    "entryPoint": {
+                        "x": -61.97999954223633,
+                        "y": -14.989999771118164,
+                        "z": -863.5399780273438
+                    },
+                    "exitPoint": {
+                        "x": 30.29404067993164,
+                        "y": -109.50080108642578,
+                        "z": -841.5659790039063
+                    }
+                },
+                {
+                    "trajectoryName": "insertion10",
+                    "showTrajectory": true,
+                    "material": "opaque",
+                    "color": "E625C6FF",
+                    "entryPoint": {
+                        "x": -50.369998931884769,
+                        "y": -7.800000190734863,
+                        "z": -876.77001953125
+                    },
+                    "exitPoint": {
+                        "x": 36.269081115722659,
+                        "y": -104.34870147705078,
+                        "z": -843.5784912109375
+                    }
+                }
+            ],
+            "numberOfTrainingTasks": 10
+        },
+        "vuforia": {
+            "numberOfImageTargets": 3,
+            "imageTargets": [
+                {
+                    "name": "PointerMarker.png",
+                    "widthInMeters": 0.07999999821186066,
+                    "trackingStatusFiliter": 1,
+                    "outlineColor": "20E993",
+                    "isTool": true,
+                    "toolCalibration": {
+                        "tipOffset": {
+                            "x": -0.07500023394823075,
+                            "y": -0.03499990701675415,
+                            "z": -0.01999998278915882
+                        },
+                        "tipOrientation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 1.0
+                        },
+                        "diameter": 0.003050000173971057
+                    },
+                    "isPatient": false,
+                    "isCalibrationTool": false
+                },
+                {
+                    "name": "PatientMarker.jpg",
+                    "widthInMeters": 0.07999999821186066,
+                    "trackingStatusFiliter": 1,
+                    "outlineColor": "E9206B",
+                    "isTool": false,
+                    "toolCalibration": {
+                        "tipOffset": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "tipOrientation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        },
+                        "diameter": 0.0
+                    },
+                    "isPatient": true,
+                    "isCalibrationTool": false
+                },
+                {
+                    "name": "circlesMarker2mm.png",
+                    "widthInMeters": 0.10000000149011612,
+                    "trackingStatusFiliter": 1,
+                    "outlineColor": "E9206B",
+                    "isTool": false,
+                    "toolCalibration": {
+                        "tipOffset": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "tipOrientation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        },
+                        "diameter": 0.0
+                    },
+                    "isPatient": false,
+                    "isCalibrationTool": true
+                }
+            ]
+        },
+        "landmarksRegistration": {
+            "fileName": "evdRegistrationPoints.txt",
+            "material": "transparent",
+            "color": "00FF00",
+            "sphereRadious": 0.0020000000949949028,
+            "useSubset": true,
+            "subsetIndeces": [
+                0,
+                1,
+                2,
+                7,
+                8,
+                9
+            ]
+        },
+        "registration": {
+            "registrationMatrix": "registrationMatrix.txt",
+            "sourcePoints": "sourcePoints.txt",
+            "targetPoints": "targetPoints.txt",
+            "recordedData": "recordedData"
+        },
+        "calibrationCylinderPoisitionVuforia": {
+            "x": -0.15000000596046449,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "calibrationCylinderPoisitionAruco": {
+            "x": 0.15000000596046449,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "calibrationTimeInSeconds": 6,
+        "pivotCalibrationTimeInSeconds": 40,
+        "recordDataActive": true,
+        "ignoreInvalidMarkerPosition": true,
+        "rotateDistanceMenu": true,
+        "saveMatrixButNotAttach": false,
+        "sizeOf1Dwidgets": 150,
+        "disk1Active": true,
+        "disk2Active": false,
+        "disk3Active": true,
+        "disk1Diameter": 2.0,
+        "disk2Diameter": 2.0,
+        "disk3Diameter": 2.0,
+        "shouldSaveTooltipCalibration": true
+    },
+    "nativeConfig": {
+        "pvCamera": {
+            "pvActive": true,
+            "width": 1920,
+            "height": 1080
+        },
+        "aruco": {
+            "numberOfMarkers": 2,
+            "markerSize": 0.07000000029802323,
+            "marker": [
+                {
+                    "name": "PointerMarker",
+                    "trackingStatusFiliter": 1,
+                    "outlineColor": "20E993",
+                    "isTool": true,
+                    "toolCalibration": {
+                        "tipOffset": {
+                            "x": 0.0012627399992197753,
+                            "y": 0.08701329678297043,
+                            "z": -0.10125012695789337
+                        },
+                        "tipOrientation": {
+                            "x": -0.004674360156059265,
+                            "y": 0.6907545924186707,
+                            "z": 0.7230122089385986,
+                            "w": 0.009465780109167099
+                        },
+                        "diameter": 0.0
+                    },
+                    "isPatient": false,
+                    "isCalibrationTool": false
+                },
+                {
+                    "name": "PatientMarker",
+                    "trackingStatusFiliter": 1,
+                    "outlineColor": "E9206B",
+                    "isTool": false,
+                    "toolCalibration": {
+                        "tipOffset": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "tipOrientation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        },
+                        "diameter": 0.0
+                    },
+                    "isPatient": true,
+                    "isCalibrationTool": false
+                }
+            ],
+            "trackTheMarker": false,
+            "trackTheBoard": false,
+            "trackNormal": true
+        }
+    },
+    "ndiConfig": {
+        "ipAddress": "172.24.208.1",
+        "portNumber": 22222,
+        "markerNamePort1": "NDIpointer",
+        "markerNamePort2": "NDIpatient39",
+        "markerNamePort3": "NDIcalibrationTool",
+        "calibrationMatrix": "calibrationMatrix.txt"
+    }
+}

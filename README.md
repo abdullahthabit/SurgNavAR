@@ -98,11 +98,10 @@ See [Developer Guide](./Docs/DeveloperGuide.md)
 If you use this framework in your research, please cite:
 
 ```bibtex
-@misc{ARNavFramework2026,
-  title = {AR Surgical Navigation Framework},
-  author = {Your Name and Contributors},
-  year = {2026},
-  howpublished = {\url{https://github.com/YOUR_USERNAME/AR-Surgical-Navigation-Framework}},
-  note = {Open-source AR framework for surgical navigation research}
+@article{thabit2026surgnavar,
+  title={SurgNavAR: An Augmented Reality Surgical Navigation Framework for Optical See-Through Head Mounted Displays},
+  author={Thabit, Abdullah and Benmahdjoub, Mohamed and Jinabade, Rafiuddin and Salim, Hizirwan S and van Veelen, Marie-Lise C and van Vledder, Mark G and Wolvius, Eppo B and van Walsum, Theo},
+  journal={arXiv preprint arXiv:2603.29990},
+  year={2026}
 }
 ```

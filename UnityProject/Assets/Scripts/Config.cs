@@ -117,7 +117,8 @@ public class Config : MonoBehaviour
             UpdateExistingApplicationName();
         }
     }
-
+    
+    // called from UI -> InputFieldApplicationName
     public void UpdateNewApplicationName(string inputFieldText)
     {
         newApplicationName = inputFieldText;
@@ -130,6 +131,7 @@ public class Config : MonoBehaviour
         configFilePath = Path.Combine(ApplicationFolder, $"config_{applicationNames[dropDownMenu.value]}.json");
     }
 
+    // called from WelcomeSceneUIController.cs => start() 
     public void CreateNewApplication()
     {
         StartCoroutine(CreateNewApplicationRoutine());
@@ -162,6 +164,7 @@ public class Config : MonoBehaviour
         LoadConfigFile();
     }
 
+    // called from WelcomeSceneUIController.cs => start() 
     public void LoadExistingApplication()
     {
         SetApplicationSubFolders();
@@ -226,24 +229,9 @@ public class Config : MonoBehaviour
     private void ActivateGoToApplicationButton()
     {
         GoToApplicationButton.enabled = true;
-
-        //foreach (Transform child in GoToApplicationButton.transform)
-        //{
-        //    Debug.Log($"child_name = {child.name}");
-        //    if (child.name == "Backplate")
-        //    {
-        //        Debug.Log("setting color of button to green !!");
-        //        Debug.Log($"current color is = {child.GetComponent<RawImage>().color}");
-        //        child.GetComponent<RawImage>().color = Color.green;
-        //        Debug.Log($"updated color is = {child.GetComponent<RawImage>().color}");
-        //        // 97D8FF
-        //    }
-        //}
     }
 
-    // --------------------------------------------------------------
-    // Copy using UnityWebRequest
-    // --------------------------------------------------------------
+    // Copy DemoApplication using UnityWebRequest
     private IEnumerator CopyDirectoryWithWebRequests(string sourceDir, string targetDir)
     {
         Directory.CreateDirectory(targetDir);

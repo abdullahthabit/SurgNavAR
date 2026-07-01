@@ -137,7 +137,6 @@ public class PivotCalibration : MonoBehaviour
             if(toolCalibrationPoses.Count == referenceTooltipCounter)
             {
                 FindToolTipFromCalibrationPoses();
-                //scriptsGameObject.GetComponent<NDIconnection>().stopCollectingDataForCalibration = true;
                 beep.Play(0);
                 skipPoseRecording = false;
             }
@@ -152,7 +151,6 @@ public class PivotCalibration : MonoBehaviour
             if (toolToCalibrate.GetComponent<MarkerTrackingStatus>().Tracked && referenceMarker.GetComponent<MarkerTrackingStatus>().Tracked)
             {
                 skipPoseRecording = false;
-                //locateToolTipWithReferenceMarker();
                 locateTooltipOrientationWithToolMarker();
                 toolCalibrationPoses.Add(toolToCalibrate.transform.localToWorldMatrix);
                 ReferenceCalibrationPoses.Add(referenceMarker.transform.localToWorldMatrix);
@@ -170,11 +168,6 @@ public class PivotCalibration : MonoBehaviour
             {
                 collectReferenceTooltipPosesActive = false;
                 computeToolTipToolCentroid();
-
-                //scriptsGameObject.GetComponent<NDIconnection>().stopCollectingDataForCalibration = true;
-
-                //computeToolTipCentroid();
-                //referenceToolTipPoses.Clear();
 
                 recordMarkerPosesOverColibrationPoses("tool");
                 positionOfrecordedToolTooltips.Clear();
@@ -214,8 +207,6 @@ public class PivotCalibration : MonoBehaviour
             {
                 collectTooltipPositionAndOrientationActive = false;
                 computeToolTipPositionOrientationCentroid();
-
-                //scriptsGameObject.GetComponent<NDIconnection>().stopCollectingDataForCalibration = true;
 
                 recordMarkerPosesOverColibrationPoses("reference");
 
@@ -313,16 +304,6 @@ public class PivotCalibration : MonoBehaviour
             Debug.Log("Starting to collect tool poses for calibration: " + toolToCalibrate.name);
 
             showRecoridingSphere();
-            //// recording sphere
-            //recordingSpehere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            //recordingSpehere.transform.parent = toolToCalibrate.transform;
-            //recordingSpehere.transform.localPosition = new Vector3(0f, 0f, 0f);
-            //recordingSpehere.transform.localRotation = Quaternion.identity;
-            //recordingSpehere.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-            //recordingSpehere.transform.gameObject.SetActive(true);
-            //recordingSpehere.GetComponent<Renderer>().material.color = Color.blue;
-
-            //scriptsGameObject.GetComponent<NDIconnection>().RecordPoseData(true, "pivot");
         }
     }
 
@@ -406,29 +387,11 @@ public class PivotCalibration : MonoBehaviour
             tipSphere.transform.localRotation = Quaternion.identity;
             tipSphere.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
             tipSphere.SetActive(true);
-            //tipSphere.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-            //tipSphere.GetComponent<Renderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+            
             tooltipPositions.Add(tooltip.transform.localPosition);
             tooltipOrientations.Add(tooltip.transform.localRotation);
             tooltipCalibrationMethods.Add("invalid");
-            markerTrackingMethods.Add(trackingModeActive);
-
-
-            //if (Config.Instance.isVuforiaTrackingActive)
-            //{
-            //    int index = tools.Values.ToList().IndexOf(toolToCalibrate.name.Substring(7));
-            //    Debug.Log(toolToCalibrate.name.Substring(7));
-            //    Debug.Log(index);
-            //    Config.Instance.configFile.unityConfig.vuforia.imageTargets[index].toolCalibration.tipOffset = tooltip.transform.localPosition;
-            //} 
-            //else
-            //{
-            //    int index = tools.Values.ToList().IndexOf(toolToCalibrate.name.Substring(5));
-            //    Debug.Log(toolToCalibrate.name.Substring(5));
-            //    Debug.Log(index);
-            //    Config.Instance.configFile.nativeConfig.aruco.marker[index].toolCalibration.tipOffset = tooltip.transform.localPosition;
-            //}
-                
+            markerTrackingMethods.Add(trackingModeActive);    
         }
     }
 
@@ -479,17 +442,12 @@ public class PivotCalibration : MonoBehaviour
         }
         else
         {
-            //GameObject tooltipCylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            //tooltipCylinder.transform.localScale = new Vector3(1, 17.875f, 1);      // based on the optical pointer shaft length (~143mm / 2 / 0.004)
-            //tooltipCylinder.transform.localPosition = new Vector3(0, tooltipCylinder.transform.localScale.y, 0);
-
             // create hollow cylinder
             GameObject tooltipCylinder2 = GameObject.Instantiate(diskPrefab);
             tooltipCylinder2.transform.localScale = new Vector3(0.5f, 17.875f*5, 0.5f);      // based on the optical pointer shaft length (~143mm / 2 / 0.004)
             tooltipCylinder2.transform.localPosition = new Vector3(0, 17.875f, 0);
 
             GameObject tooltipSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            //tooltipCylinder.transform.parent = tooltipSphere.transform;
             tooltipCylinder2.transform.parent = tooltipSphere.transform;
             tooltipSphere.transform.localScale = 0.004f * Vector3.one;
 
@@ -499,7 +457,7 @@ public class PivotCalibration : MonoBehaviour
                 tooltipLocalPosition = Config.Instance.configFile.unityConfig.calibrationCylinderPoisitionAruco;
                 tooltipSphere.transform.localRotation = Quaternion.Euler(90, 0, 0);
 #if UNITY_ANDROID
-                tooltipSphere.transform.localRotation = Quaternion.Euler(270, 0, 0);
+                tooltipSphere.transform.localRotation = Quaternion.Euler(270, 0, 0); // ML2 aruco coordinates differ from that of HL2
 #endif
             }
             else
@@ -510,17 +468,13 @@ public class PivotCalibration : MonoBehaviour
 
             tooltipSphere.transform.parent = tooltipCalibCylinder.transform;
             tooltipCalibCylinder.transform.parent = referenceMarkerOrientation.transform;
-            //tooltip.transform.localPosition = Vector3.zero;
 
             tooltipCalibCylinder.transform.localPosition = tooltipLocalPosition;
             tooltipCalibCylinder.transform.localRotation = Quaternion.identity;
             tooltipCalibCylinder.transform.localScale = Vector3.one;
 
-            //tooltipSphere.GetComponent<Renderer>().material.color = referenceMarkerOrientation.GetComponentInChildren<Renderer>().material.color;
             tooltipSphere.GetComponent<Renderer>().material.color = Color.green;
             tooltipCylinder2.transform.GetChild(0).GetComponent<Renderer>().material.color = referenceMarkerOrientation.GetComponentInChildren<Renderer>().material.color;
-
-            //tooltipSphere.GetComponent<MeshRenderer>().enabled = false;
         }
     }
 
@@ -535,7 +489,6 @@ public class PivotCalibration : MonoBehaviour
             if (child.name == "tooltip")
             {
                 Destroy(child.gameObject);
-                //tooltipToolCalibCylinder = child.gameObject;
             }
         }
         float drillDiameter = float.Parse(drillDropDownMenu.options[drillDropDownMenu.value].text) * 0.001f;
@@ -564,7 +517,6 @@ public class PivotCalibration : MonoBehaviour
 
         tooltipSphere.transform.parent = tooltipToolCalibCylinder.transform;
         tooltipToolCalibCylinder.transform.parent = referenceMarker.transform;
-        //tooltip.transform.localPosition = Vector3.zero;
 
         tooltipToolCalibCylinder.transform.localPosition = tooltipLocalPosition;
         tooltipToolCalibCylinder.transform.localRotation = Quaternion.identity;
@@ -584,7 +536,6 @@ public class PivotCalibration : MonoBehaviour
     {
         collectTooltipPositionAndOrientationActive = true;
         showRecoridingSphere();
-        //scriptsGameObject.GetComponent<NDIconnection>().RecordPoseData(true, "marker_reference");
     }
 
     public void LoadCalibrationOfTooltip()
@@ -613,7 +564,6 @@ public class PivotCalibration : MonoBehaviour
             // show a sphere at the tip
             GameObject tipSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            //cylinder.transform.localScale = new Vector3(1.0f, 10.0f, 1.0f);
             cylinder.transform.localScale = new Vector3(1.0f, 17.875f, 1.0f);
             cylinder.transform.localPosition = new Vector3(0, cylinder.transform.localScale.y, 0);
 
@@ -623,7 +573,6 @@ public class PivotCalibration : MonoBehaviour
             tipSphere.transform.parent = tooltip.gameObject.transform;
             tipSphere.transform.localPosition = Vector3.zero;
             tipSphere.transform.localRotation = Quaternion.identity;
-            //tipSphere.transform.localScale = Config.Instance.configFile.unityConfig.vuforia.imageTargets[0].toolCalibration.diameter * Vector3.one;
             tipSphere.transform.localScale = 0.004f * Vector3.one;
             tipSphere.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
             cylinder.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
@@ -632,82 +581,6 @@ public class PivotCalibration : MonoBehaviour
             tooltipOrientations.Add(tooltip.transform.localRotation);
             tooltipCalibrationMethods.Add("ndi_ground_truth");
             markerTrackingMethods.Add(trackingModeActive);
-
-            //if (patientScript.trajectoriesList.Count > 0)
-            //{
-            //    GameObject traj = patientScript.trajectoriesList[patientScript.selectedTrajectoryIndex];
-
-            //    print("traj:" + traj.name);
-            //    Transform trajParent = traj.transform.parent;
-            //    GameObject tooltipCylinder = GameObject.Find("VuforiaPointerMarker");
-            //    foreach (Transform child in GameObject.Find("VuforiaPointerMarker").transform)
-            //    {
-            //        if (child.gameObject.name.Equals("tooltip"))
-            //            tooltipCylinder = child.gameObject;
-            //    }
-
-            //    traj.transform.parent = tooltipCylinder.transform.GetChild(0);
-            //    tooltipCylinder = tooltipCylinder.transform.GetChild(0).GetChild(0).gameObject;
-
-            //    Vector3 cylPos = new Vector3(tooltipCylinder.transform.localPosition.x, tooltipCylinder.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
-            //    Quaternion cylRot = Quaternion.Euler(tooltipCylinder.transform.localRotation.x, tooltipCylinder.transform.localRotation.y, tooltipCylinder.transform.localRotation.z);
-            //    Vector3 cylScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-
-            //    // commented to prevent updating the trajectory scale based on the toolsize
-            //    //traj.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-
-
-            //    //tooltipCylinder.transform.localScale = traj.transform.localScale;//new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            //    //tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, traj.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
-            //    tooltipCylinder.transform.localPosition = new Vector3(traj.transform.localPosition.x, traj.transform.localScale.y, traj.transform.localPosition.z);
-            //    tooltipCylinder.transform.localRotation = traj.transform.localRotation;
-            //    tooltipCylinder.transform.localScale = traj.transform.localScale;
-            //    print("SCALE:" + traj.transform.localScale);
-            //    GameObject disk1 = traj.transform.GetChild(0).gameObject;
-            //    GameObject disk2 = traj.transform.GetChild(1).gameObject;
-            //    GameObject disk3 = traj.transform.GetChild(2).gameObject;
-
-            //    // to avoid dublicates
-            //    if (GameObject.Find("toolDisk1"))
-            //        Destroy(GameObject.Find("toolDisk1"));
-            //    if (GameObject.Find("toolDisk2"))
-            //        Destroy(GameObject.Find("toolDisk2"));
-            //    if (GameObject.Find("toolDisk3"))
-            //        Destroy(GameObject.Find("toolDisk3"));
-
-            //    GameObject disk1Drill = Instantiate(disk1, tooltipCylinder.transform);
-            //    disk1Drill.name = "toolDisk1";
-            //    GameObject disk2Drill = Instantiate(disk2, tooltipCylinder.transform);
-            //    disk2Drill.name = "toolDisk2";
-            //    GameObject disk3Drill = Instantiate(disk3, tooltipCylinder.transform);
-            //    disk3Drill.name = "toolDisk3";
-
-            //    disk1Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-            //    disk2Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-            //    disk3Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-
-            //    tooltipCylinder.transform.localRotation = cylRot;
-            //    //tooltipCylinder.transform.localScale = cylScale;
-            //    tooltipCylinder.transform.localPosition = new Vector3(cylPos.x, traj.transform.localScale.y, cylPos.z);
-
-            //    traj.transform.parent = trajParent;
-
-            //    // for evd trajectories (makes it shorter (half) than planning
-            //    // workaround to avoid having the disk getting shorter and being displaced
-            //    disk1Drill.transform.parent = tooltipCylinder.transform.parent;
-            //    disk2Drill.transform.parent = tooltipCylinder.transform.parent;
-            //    disk3Drill.transform.parent = tooltipCylinder.transform.parent;
-            //    tooltipCylinder.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y / 2, tooltipCylinder.transform.localScale.z);
-            //    tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, tooltipCylinder.transform.localPosition.y - tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localPosition.z);
-            //    disk1Drill.transform.parent = tooltipCylinder.transform;
-            //    disk2Drill.transform.parent = tooltipCylinder.transform;
-            //    disk3Drill.transform.parent = tooltipCylinder.transform;
-
-            //    // only activate after starting the insertion
-            //    disk1Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-            //    disk2Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-            //    disk3Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-            //}
 
             CreateDisksForTooltipBasedOnPlanningTrajectories();
 
@@ -766,11 +639,6 @@ public class PivotCalibration : MonoBehaviour
         Quaternion cylRot = Quaternion.Euler(tooltipCylinder.transform.localRotation.x, tooltipCylinder.transform.localRotation.y, tooltipCylinder.transform.localRotation.z);
         Vector3 cylScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localScale.z);
 
-        // commented to prevent updating the trajectory scale based on the toolsize
-        //traj.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-
-        //tooltipCylinder.transform.localScale = traj.transform.localScale;//new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-        //tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, traj.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
         tooltipCylinder.transform.localPosition = new Vector3(traj.transform.localPosition.x, traj.transform.localScale.y, traj.transform.localPosition.z);
         tooltipCylinder.transform.localRotation = traj.transform.localRotation;
         tooltipCylinder.transform.localScale = traj.transform.localScale;
@@ -886,7 +754,6 @@ public class PivotCalibration : MonoBehaviour
         {
             collectReferenceTooltipPosesActive = true;
             showRecoridingSphere();
-            //scriptsGameObject.GetComponent<NDIconnection>().RecordPoseData(true, "calibration_tool");
         }     
         else if (isDrillCalibrated)
         {
@@ -906,9 +773,6 @@ public class PivotCalibration : MonoBehaviour
             tipSphere.SetActive(true);
             tipSphere.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
             cylinder.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-            //tipSphere.GetComponent<Renderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
-            //cylinder.GetComponent<Renderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
-
 
             foreach (Transform child in toolToCalibrate.transform)
             {
@@ -931,7 +795,6 @@ public class PivotCalibration : MonoBehaviour
                 }
             }
             tooltip.name = "tooltip";
-            //patientScript.trajectoriesList[patientScript.selectedTrajectoryIndex]
             GameObject traj = patientScript.trajectoriesList[patientScript.selectedTrajectoryIndex];
 
             print("traj:" + traj.name);
@@ -951,8 +814,6 @@ public class PivotCalibration : MonoBehaviour
             Vector3 cylScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localScale.z);
 
             traj.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            //tooltipCylinder.transform.localScale = traj.transform.localScale;//new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            //tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, traj.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
             tooltipCylinder.transform.localPosition = new Vector3(traj.transform.localPosition.x, traj.transform.localScale.y, traj.transform.localPosition.z);
             tooltipCylinder.transform.localRotation = traj.transform.localRotation;
             tooltipCylinder.transform.localScale = traj.transform.localScale;
@@ -966,7 +827,6 @@ public class PivotCalibration : MonoBehaviour
             disk2Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
 
             tooltipCylinder.transform.localRotation = cylRot;
-            //tooltipCylinder.transform.localScale = cylScale;
             tooltipCylinder.transform.localPosition = new Vector3(cylPos.x, traj.transform.localScale.y, cylPos.z);
 
 
@@ -1020,10 +880,7 @@ public class PivotCalibration : MonoBehaviour
             tipSphere.SetActive(true);
             tipSphere.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
             cylinder.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-            //tipSphere.GetComponent<Renderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
-            //cylinder.GetComponent<Renderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
-
-
+            
             foreach (Transform child in toolToCalibrate.transform)
             {
                 if (child.name == "tooltip(Clone)")
@@ -1047,7 +904,6 @@ public class PivotCalibration : MonoBehaviour
                 }
             }
             tooltip.name = "tooltip";
-            //patientScript.trajectoriesList[patientScript.selectedTrajectoryIndex]
             GameObject traj = patientScript.trajectoriesList[patientScript.selectedTrajectoryIndex];
 
             print("traj:" + traj.name);
@@ -1067,8 +923,6 @@ public class PivotCalibration : MonoBehaviour
             Vector3 cylScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localScale.z);
 
             traj.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            //tooltipCylinder.transform.localScale = traj.transform.localScale;//new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            //tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, traj.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
             tooltipCylinder.transform.localPosition = new Vector3(traj.transform.localPosition.x, traj.transform.localScale.y, traj.transform.localPosition.z);
             tooltipCylinder.transform.localRotation = traj.transform.localRotation;
             tooltipCylinder.transform.localScale = traj.transform.localScale;
@@ -1082,7 +936,6 @@ public class PivotCalibration : MonoBehaviour
             disk2Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
 
             tooltipCylinder.transform.localRotation = cylRot;
-            //tooltipCylinder.transform.localScale = cylScale;
             tooltipCylinder.transform.localPosition = new Vector3(cylPos.x, traj.transform.localScale.y, cylPos.z);
 
 
@@ -1110,15 +963,6 @@ public class PivotCalibration : MonoBehaviour
     }
     void computeToolTipCentroid()
     {
-        //// remove already created tooltip in order to replace it with the new one
-        //foreach (Transform child in toolToCalibrate.transform)
-        //{
-        //    if (child.name == "tooltip")
-        //    {
-        //        GameObject.Destroy(child.gameObject);
-        //    }
-        //}
-
         Vector3 sum = Vector3.zero;
         foreach(var position in referenceToolTipPoses)
         {
@@ -1195,9 +1039,6 @@ public class PivotCalibration : MonoBehaviour
         tipSphere.GetComponent<Renderer>().material.color = newColor;
         cylinder.GetComponent<Renderer>().material.color = newColor;
 
-        //tipSphere.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-        //cylinder.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-
         tooltipPositions.Add(tooltip.transform.localPosition);
         tooltipOrientations.Add(tooltip.transform.localRotation);
         tooltipCalibrationMethods.Add("calibration_tool");
@@ -1217,83 +1058,6 @@ public class PivotCalibration : MonoBehaviour
             Config.Instance.configFile.nativeConfig.aruco.marker[index].toolCalibration.tipOrientation = tooltip.transform.localRotation;
             Config.Instance.configFile.nativeConfig.aruco.marker[index].toolCalibration.diameter = drillDiameter;
         }
-
-        //if(patientScript.trajectoriesList.Count > 0)
-        //{
-        //    GameObject traj = patientScript.trajectoriesList[patientScript.selectedTrajectoryIndex];
-
-        //    print("traj:" + traj.name);
-        //    Transform trajParent = traj.transform.parent;
-        //    GameObject tooltipCylinder = GameObject.Find("VuforiaPointerMarker");
-        //    foreach (Transform child in GameObject.Find("VuforiaPointerMarker").transform)
-        //    {
-        //        if (child.gameObject.name.Equals("tooltip"))
-        //            tooltipCylinder = child.gameObject;
-        //    }
-
-        //    traj.transform.parent = tooltipCylinder.transform.GetChild(0);
-        //    tooltipCylinder = tooltipCylinder.transform.GetChild(0).GetChild(0).gameObject;
-
-        //    Vector3 cylPos = new Vector3(tooltipCylinder.transform.localPosition.x, tooltipCylinder.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
-        //    Quaternion cylRot = Quaternion.Euler(tooltipCylinder.transform.localRotation.x, tooltipCylinder.transform.localRotation.y, tooltipCylinder.transform.localRotation.z);
-        //    Vector3 cylScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-
-        //    // commented to prevent updating the trajectory scale based on the toolsize
-        //    //traj.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-
-
-        //    //tooltipCylinder.transform.localScale = traj.transform.localScale;//new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-        //    //tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, traj.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
-        //    tooltipCylinder.transform.localPosition = new Vector3(traj.transform.localPosition.x, traj.transform.localScale.y, traj.transform.localPosition.z);
-        //    tooltipCylinder.transform.localRotation = traj.transform.localRotation;
-        //    tooltipCylinder.transform.localScale = traj.transform.localScale;
-        //    print("SCALE:" + traj.transform.localScale);
-        //    GameObject disk1 = traj.transform.GetChild(0).gameObject;
-        //    GameObject disk2 = traj.transform.GetChild(1).gameObject;
-        //    GameObject disk3 = traj.transform.GetChild(2).gameObject;
-
-        //    // to avoid dublicates
-        //    if (GameObject.Find("toolDisk1"))
-        //        Destroy(GameObject.Find("toolDisk1"));
-        //    if (GameObject.Find("toolDisk2"))
-        //        Destroy(GameObject.Find("toolDisk2"));
-        //    if (GameObject.Find("toolDisk3"))
-        //        Destroy(GameObject.Find("toolDisk3"));
-
-        //    GameObject disk1Drill = Instantiate(disk1, tooltipCylinder.transform);
-        //    disk1Drill.name = "toolDisk1";
-        //    GameObject disk2Drill = Instantiate(disk2, tooltipCylinder.transform);
-        //    disk2Drill.name = "toolDisk2";
-        //    GameObject disk3Drill = Instantiate(disk3, tooltipCylinder.transform);
-        //    disk3Drill.name = "toolDisk3";
-
-        //    disk1Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-        //    disk2Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-        //    disk3Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-
-        //    tooltipCylinder.transform.localRotation = cylRot;
-        //    //tooltipCylinder.transform.localScale = cylScale;
-        //    tooltipCylinder.transform.localPosition = new Vector3(cylPos.x, traj.transform.localScale.y, cylPos.z);
-
-        //    traj.transform.parent = trajParent;
-
-        //    // for evd trajectories (makes it shorter (half) than planning
-        //    // workaround to avoid having the disk getting shorter and being displaced
-        //    disk1Drill.transform.parent = tooltipCylinder.transform.parent;
-        //    disk2Drill.transform.parent = tooltipCylinder.transform.parent;
-        //    disk3Drill.transform.parent = tooltipCylinder.transform.parent;
-        //    tooltipCylinder.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y / 2, tooltipCylinder.transform.localScale.z);
-        //    tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, tooltipCylinder.transform.localPosition.y - tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localPosition.z);
-        //    disk1Drill.transform.parent = tooltipCylinder.transform;
-        //    disk2Drill.transform.parent = tooltipCylinder.transform;
-        //    disk3Drill.transform.parent = tooltipCylinder.transform;
-
-        //    // only activate after starting the insertion
-        //    disk1Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //    disk2Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //    disk3Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //}
-        //
 
         CreateDisksForTooltipBasedOnPlanningTrajectories();
 
@@ -1337,15 +1101,6 @@ public class PivotCalibration : MonoBehaviour
 
     void computeToolTipPositionOrientationCentroid()
     {
-        //// remove already created tooltip in order to replace it with the new one
-        //foreach (Transform child in toolToCalibrate.transform)
-        //{
-        //    if (child.name == "tooltip")
-        //    {
-        //        GameObject.Destroy(child.gameObject);
-        //    }
-        //}
-
         GameObject Cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         Cylinder.transform.localScale = new Vector3(1, 10, 1);
         Cylinder.transform.localPosition = new Vector3(0, Cylinder.transform.localScale.y, 0);
@@ -1371,16 +1126,11 @@ public class PivotCalibration : MonoBehaviour
         tooltip.transform.parent = toolToCalibrate.transform;
         tooltip.transform.localPosition = Utils.computePointsCentroid(positionOfrecordedReferenceTooltips);
         tooltip.transform.localRotation = Utils.computeAverageQuaternion(orientationOfrecordedReferenceTooltips);
-        //tooltip.transform.localPosition = positionOfrecordedReferenceTooltips[0];
-        //tooltip.transform.localRotation = orientationOfrecordedReferenceTooltips[0];
         tooltip.transform.localScale = Vector3.one;
 
         Color newColor = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
         Sphere.GetComponent<Renderer>().material.color = newColor;
         Cylinder.GetComponent<Renderer>().material.color = newColor;
-
-        //Sphere.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-        //Cylinder.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
 
         print($"first Position = {positionOfrecordedReferenceTooltips[0]} ---------- mean Position = {tooltip.transform.localPosition}");
         print($"first Rotation = {orientationOfrecordedReferenceTooltips[0]} ---------- mean Rotation = {tooltip.transform.localRotation}");
@@ -1389,83 +1139,6 @@ public class PivotCalibration : MonoBehaviour
         tooltipOrientations.Add(tooltip.transform.localRotation);
         tooltipCalibrationMethods.Add("marker_reference");
         markerTrackingMethods.Add(trackingModeActive);
-
-
-        //if (patientScript.trajectoriesList.Count > 0)
-        //{
-        //    GameObject traj = patientScript.trajectoriesList[patientScript.selectedTrajectoryIndex];
-
-        //    print("traj:" + traj.name);
-        //    Transform trajParent = traj.transform.parent;
-        //    GameObject tooltipCylinder = toolToCalibrate;
-        //    foreach (Transform child in toolToCalibrate.transform)
-        //    {
-        //        if (child.gameObject.name.Equals("tooltip"))
-        //            tooltipCylinder = child.gameObject;
-        //    }
-
-        //    traj.transform.parent = tooltipCylinder.transform.GetChild(0);
-        //    tooltipCylinder = tooltipCylinder.transform.GetChild(0).GetChild(0).gameObject;
-
-        //    Vector3 cylPos = new Vector3(tooltipCylinder.transform.localPosition.x, tooltipCylinder.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
-        //    Quaternion cylRot = Quaternion.Euler(tooltipCylinder.transform.localRotation.x, tooltipCylinder.transform.localRotation.y, tooltipCylinder.transform.localRotation.z);
-        //    Vector3 cylScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-
-        //    // commented to prevent updating the trajectory scale based on the toolsize
-        //    //traj.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-
-
-        //    //tooltipCylinder.transform.localScale = traj.transform.localScale;//new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-        //    //tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, traj.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
-        //    tooltipCylinder.transform.localPosition = new Vector3(traj.transform.localPosition.x, traj.transform.localScale.y, traj.transform.localPosition.z);
-        //    tooltipCylinder.transform.localRotation = traj.transform.localRotation;
-        //    tooltipCylinder.transform.localScale = traj.transform.localScale;
-        //    print("SCALE:" + traj.transform.localScale);
-        //    GameObject disk1 = traj.transform.GetChild(0).gameObject;
-        //    GameObject disk2 = traj.transform.GetChild(1).gameObject;
-        //    GameObject disk3 = traj.transform.GetChild(2).gameObject;
-
-        //    // to avoid dublicates
-        //    if (GameObject.Find("toolDisk1"))
-        //        Destroy(GameObject.Find("toolDisk1"));
-        //    if (GameObject.Find("toolDisk2"))
-        //        Destroy(GameObject.Find("toolDisk2"));
-        //    if (GameObject.Find("toolDisk3"))
-        //        Destroy(GameObject.Find("toolDisk3"));
-
-        //    GameObject disk1Drill = Instantiate(disk1, tooltipCylinder.transform);
-        //    disk1Drill.name = "toolDisk1";
-        //    GameObject disk2Drill = Instantiate(disk2, tooltipCylinder.transform);
-        //    disk2Drill.name = "toolDisk2";
-        //    GameObject disk3Drill = Instantiate(disk3, tooltipCylinder.transform);
-        //    disk3Drill.name = "toolDisk3";
-
-        //    disk1Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-        //    disk2Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-        //    disk3Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-
-        //    tooltipCylinder.transform.localRotation = cylRot;
-        //    //tooltipCylinder.transform.localScale = cylScale;
-        //    tooltipCylinder.transform.localPosition = new Vector3(cylPos.x, traj.transform.localScale.y, cylPos.z);
-
-        //    traj.transform.parent = trajParent;
-
-        //    // for evd trajectories (makes it shorter (half) than planning
-        //    // workaround to avoid having the disk getting shorter and being displaced
-        //    disk1Drill.transform.parent = tooltipCylinder.transform.parent;
-        //    disk2Drill.transform.parent = tooltipCylinder.transform.parent;
-        //    disk3Drill.transform.parent = tooltipCylinder.transform.parent;
-        //    tooltipCylinder.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y / 2, tooltipCylinder.transform.localScale.z);
-        //    tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, tooltipCylinder.transform.localPosition.y - tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localPosition.z);
-        //    disk1Drill.transform.parent = tooltipCylinder.transform;
-        //    disk2Drill.transform.parent = tooltipCylinder.transform;
-        //    disk3Drill.transform.parent = tooltipCylinder.transform;
-
-        //    // only activate after starting the insertion
-        //    disk1Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //    disk2Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //    disk3Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //}
 
         CreateDisksForTooltipBasedOnPlanningTrajectories();
 
@@ -1504,89 +1177,10 @@ public class PivotCalibration : MonoBehaviour
         Sphere.GetComponent<Renderer>().material.color = newColor;
         Cylinder.GetComponent<Renderer>().material.color = newColor;
 
-        //Sphere.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-        //Cylinder.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-
         tooltipPositions.Add(tooltip.transform.localPosition);
         tooltipOrientations.Add(tooltip.transform.localRotation);
         tooltipCalibrationMethods.Add("calibration_tool");
         markerTrackingMethods.Add(trackingModeActive);
-
-        //if (patientScript.trajectoriesList.Count > 0)
-        //{
-        //    GameObject traj = patientScript.trajectoriesList[patientScript.selectedTrajectoryIndex];
-
-        //    print("traj:" + traj.name);
-        //    Transform trajParent = traj.transform.parent;
-        //    GameObject tooltipCylinder = toolToCalibrate;
-        //    foreach (Transform child in toolToCalibrate.transform)
-        //    {
-        //        if (child.gameObject.name.Equals("tooltip"))
-        //            tooltipCylinder = child.gameObject;
-        //    }
-
-        //    traj.transform.parent = tooltipCylinder.transform.GetChild(0);
-        //    tooltipCylinder = tooltipCylinder.transform.GetChild(0).GetChild(0).gameObject;
-
-        //    Vector3 cylPos = new Vector3(tooltipCylinder.transform.localPosition.x, tooltipCylinder.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
-        //    Quaternion cylRot = Quaternion.Euler(tooltipCylinder.transform.localRotation.x, tooltipCylinder.transform.localRotation.y, tooltipCylinder.transform.localRotation.z);
-        //    Vector3 cylScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-
-        //    // commented to prevent updating the trajectory scale based on the toolsize
-        //    //traj.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-
-
-        //    //tooltipCylinder.transform.localScale = traj.transform.localScale;//new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-        //    //tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, traj.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
-        //    tooltipCylinder.transform.localPosition = new Vector3(traj.transform.localPosition.x, traj.transform.localScale.y, traj.transform.localPosition.z);
-        //    tooltipCylinder.transform.localRotation = traj.transform.localRotation;
-        //    tooltipCylinder.transform.localScale = traj.transform.localScale;
-        //    print("SCALE:" + traj.transform.localScale);
-        //    GameObject disk1 = traj.transform.GetChild(0).gameObject;
-        //    GameObject disk2 = traj.transform.GetChild(1).gameObject;
-        //    GameObject disk3 = traj.transform.GetChild(2).gameObject;
-
-        //    // to avoid dublicates
-        //    if (GameObject.Find("toolDisk1"))
-        //        Destroy(GameObject.Find("toolDisk1"));
-        //    if (GameObject.Find("toolDisk2"))
-        //        Destroy(GameObject.Find("toolDisk2"));
-        //    if (GameObject.Find("toolDisk3"))
-        //        Destroy(GameObject.Find("toolDisk3"));
-
-        //    GameObject disk1Drill = Instantiate(disk1, tooltipCylinder.transform);
-        //    disk1Drill.name = "toolDisk1";
-        //    GameObject disk2Drill = Instantiate(disk2, tooltipCylinder.transform);
-        //    disk2Drill.name = "toolDisk2";
-        //    GameObject disk3Drill = Instantiate(disk3, tooltipCylinder.transform);
-        //    disk3Drill.name = "toolDisk3";
-
-        //    disk1Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-        //    disk2Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-        //    disk3Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-
-        //    tooltipCylinder.transform.localRotation = cylRot;
-        //    //tooltipCylinder.transform.localScale = cylScale;
-        //    tooltipCylinder.transform.localPosition = new Vector3(cylPos.x, traj.transform.localScale.y, cylPos.z);
-
-        //    traj.transform.parent = trajParent;
-
-        //    // for evd trajectories (makes it shorter (half) than planning
-        //    // workaround to avoid having the disk getting shorter and being displaced
-        //    disk1Drill.transform.parent = tooltipCylinder.transform.parent;
-        //    disk2Drill.transform.parent = tooltipCylinder.transform.parent;
-        //    disk3Drill.transform.parent = tooltipCylinder.transform.parent;
-        //    tooltipCylinder.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y / 2, tooltipCylinder.transform.localScale.z);
-        //    tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, tooltipCylinder.transform.localPosition.y - tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localPosition.z);
-        //    disk1Drill.transform.parent = tooltipCylinder.transform;
-        //    disk2Drill.transform.parent = tooltipCylinder.transform;
-        //    disk3Drill.transform.parent = tooltipCylinder.transform;
-
-        //    // only activate after starting the insertion
-        //    disk1Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //    disk2Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //    disk3Drill.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //}
 
         CreateDisksForTooltipBasedOnPlanningTrajectories();
 
@@ -1602,82 +1196,17 @@ public class PivotCalibration : MonoBehaviour
             Debug.Log("There is no assigned reference marker for calibration");
             return;
         }
-        //if (dropDownMenu.value == 0) // pointer
-        if (false) // pointer
-        {
-            GameObject tooltip = new GameObject("tooltip");
-            tooltip.transform.parent = referenceMarker.transform;
-            tooltip.transform.localPosition = Vector3.zero;
-            tooltip.transform.parent = toolToCalibrate.transform;
-            tooltip.transform.localRotation = Quaternion.identity;
-            tooltip.transform.localScale = Vector3.one;
 
-            // show a sphere at the tip
-            GameObject tipSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            tipSphere.transform.parent = tooltip.gameObject.transform;
-            tipSphere.transform.localPosition = Vector3.zero;
-            tipSphere.transform.localRotation = Quaternion.identity;
-            tipSphere.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
-            tipSphere.SetActive(true);
-            tipSphere.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-            //tipSphere.GetComponent<Renderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
-            tooltipPositions.Add(tooltip.transform.localPosition);
-            tooltipCalibrationMethods.Add("marker");
+        GameObject tooltip = new GameObject("ttp");
+        tooltip.transform.parent = referenceMarker.transform;
+        tooltip.transform.localPosition = tooltipCalibrationToolOffsets[drillDropDownMenu.value];
+        tooltip.transform.localRotation = Quaternion.identity;
+        tooltip.transform.localScale = Vector3.one;
 
-            if (Config.Instance.IsVuforiaTrackingActive)
-            {
-                int index = tools.Values.ToList().IndexOf(toolToCalibrate.name.Substring(7));
-                Config.Instance.configFile.unityConfig.vuforia.imageTargets[index].toolCalibration.tipOffset = tooltip.transform.localPosition;
-            }
-            else
-            {
-                int index = tools.Values.ToList().IndexOf(toolToCalibrate.name.Substring(5));
-                Config.Instance.configFile.nativeConfig.aruco.marker[index].toolCalibration.tipOffset = tooltip.transform.localPosition;
-            }
-        }
-        else
-        {
-            GameObject tooltip = new GameObject("ttp");
-            tooltip.transform.parent = referenceMarker.transform;
-            tooltip.transform.localPosition = tooltipCalibrationToolOffsets[drillDropDownMenu.value];
-            tooltip.transform.localRotation = Quaternion.identity;
-            tooltip.transform.localScale = Vector3.one;
+        tooltip.transform.parent = toolToCalibrate.transform;
 
-            //float drillDiameter = float.Parse(drillDropDownMenu.options[drillDropDownMenu.value].text) * 0.001f;
-            //// show a sphere at the tip
-            //GameObject tipSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            //GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            //cylinder.transform.localScale = new Vector3(1.0f, 10.0f, 1.0f);
-            //cylinder.transform.localPosition = new Vector3(0, cylinder.transform.localScale.y, 0);
-            //cylinder.transform.parent = tipSphere.gameObject.transform;
-            //tipSphere.transform.parent = tooltip.gameObject.transform;
-            //tipSphere.transform.localPosition = Vector3.zero;
-            //tipSphere.transform.localRotation = Quaternion.identity;
-            ////tipSphere.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
-            //tipSphere.transform.localScale = drillDiameter * Vector3.one;
-            //tipSphere.SetActive(true);
-
-            tooltip.transform.parent = toolToCalibrate.transform;
-
-            referenceToolTipPoses.Add(tooltip.transform.localPosition);
-            recordedReferenceToolTips.Add(tooltip);
-
-            ////tipSphere.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
-            //tipSphere.GetComponent<Renderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
-            //tooltipPositions.Add(tooltip.transform.localPosition);
-            //tooltipCalibrationMethods.Add("marker");
-
-            //if (Config.Instance.isVuforiaTrackingActive)
-            //{
-            //    int index = tools.Values.ToList().IndexOf(toolToCalibrate.name.Substring(7));
-            //    Config.Instance.configFile.unityConfig.vuforia.imageTargets[index].toolCalibration.tipOffset = tooltip.transform.localPosition;
-            //}
-            //else
-            //{
-            //    int index = tools.Values.ToList().IndexOf(toolToCalibrate.name.Substring(5));
-            //    Config.Instance.configFile.nativeConfig.aruco.marker[index].toolCalibration.tipOffset = tooltip.transform.localPosition;
-            //}
-        }
+        referenceToolTipPoses.Add(tooltip.transform.localPosition);
+        recordedReferenceToolTips.Add(tooltip);
     }
 
     void RuntimePivotCalibration(List<Matrix4x4> markerCalibrationPoses)
@@ -1764,7 +1293,6 @@ public class PivotCalibration : MonoBehaviour
         tipSphere.transform.localRotation = Quaternion.identity;
         tipSphere.transform.localScale = new Vector3(0.004f, 0.004f, 0.004f);
         tipSphere.SetActive(true);
-        //tipSphere.GetComponent<Renderer>().material.color = toolToCalibrate.GetComponentInChildren<Renderer>().material.color;
 
         Color newColor = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
         tipSphere.GetComponent<Renderer>().material.color = newColor;
@@ -1773,17 +1301,6 @@ public class PivotCalibration : MonoBehaviour
         tooltipOrientations.Add(tooltip.transform.localRotation);
         tooltipCalibrationMethods.Add("pivot_calibration");
         markerTrackingMethods.Add(trackingModeActive);
-
-        //if (Config.Instance.isVuforiaTrackingActive)
-        //{
-        //    int index = tools.Values.ToList().IndexOf(toolToCalibrate.name.Substring(7));
-        //    Config.Instance.configFile.unityConfig.vuforia.imageTargets[index].toolCalibration.tipOffset = tooltip.transform.localPosition;
-        //}
-        //else
-        //{
-        //    int index = tools.Values.ToList().IndexOf(toolToCalibrate.name.Substring(5));
-        //    Config.Instance.configFile.nativeConfig.aruco.marker[index].toolCalibration.tipOffset = tooltip.transform.localPosition;
-        //}
     }
 
     List<Matrix4x4> ReadToolCalibrationDataFromCSV(string toolName)

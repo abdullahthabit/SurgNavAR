@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Dummiesman;
-//using MixedReality.Toolkit.UI;
-//using MixedReality.Toolkit.UI.BoundsControl;
-//using MixedReality.Toolkit.Input;
-//using MixedReality.Toolkit.Utilities;
 using MixedReality.Toolkit.SpatialManipulation;
 using MixedReality.Toolkit.UX;
 using TMPro;
@@ -55,7 +51,6 @@ public class Patient : MonoBehaviour
     public int selectedTrajectoryIndex = 0;
     public GameObject scriptsGameObject;
 
-    //public GameObject distanceFeedbackMenu;
     public bool isPatientaligned = false;
 
     int registrationCounter = 0;
@@ -133,13 +128,6 @@ public class Patient : MonoBehaviour
 
         widgets1DManipuation.SetActive(false);
 
-        //for (int i = 0; i < list_cubes.Count; i++)
-        //{
-        //    list_cubes[i].gameObject.SetActive(false);
-        //    list_shperes[i].gameObject.SetActive(false);
-        //    list_cylinders[i].gameObject.SetActive(false);
-        //}
-
         patientContainer.GetComponent<ObjectManipulator>().enabled = true;
         patientContainer.GetComponent<BoundsControl>().enabled = true;
     }
@@ -147,25 +135,12 @@ public class Patient : MonoBehaviour
     public void activate1DManipulationHandles()
     {
         patientContainer.GetComponent<ObjectManipulator>().enabled = false;
-        //patientContainer.GetComponent<BoundsControl>().enabled = false;
 
         if(widgets1DManipuation!=null)
         {
             widgets1DManipuation.SetActive(true);
             return;
         }
-
-        //if (list_cubes.Count > 0)
-        //{
-        //    for (int i = 0; i < list_cubes.Count; i++)
-        //    {
-        //        list_cubes[i].gameObject.SetActive(true);
-        //        list_shperes[i].gameObject.SetActive(true);
-        //        list_cylinders[i].gameObject.SetActive(true);
-        //    }
-
-        //    return;
-        //}
 
         widgets1DManipuation = new GameObject("1DWidgets");
         widgets1DManipuation.transform.parent = patientContainer.transform;
@@ -298,10 +273,9 @@ public class Patient : MonoBehaviour
                 DetachPatientModelFromMarker();
                 patientContainer.transform.localScale = Vector3.one * Config.Instance.configFile.unityConfig.patientModel.scale;
                 patientContainer.transform.position = Camera.main.transform.position + (Camera.main.transform.forward * 0.5f);
-                //foreach (Transform child in patientContainer.transform) { child.localPosition = patientContainerCenter; }
-                foreach (Transform child in patientContainer.transform) // special case to handle putting the ribcage inside the torso model
+                foreach (Transform child in patientContainer.transform)
                 {
-                    if (child.name == "ribs")
+                    if (child.name == "ribs") // special case to handle putting the ribcage inside the torso model
                         child.transform.localPosition = new Vector3(1, -190, -925);
                     else if (child.name == "1DWidgets")
                         child.transform.localPosition = Vector3.zero;
@@ -376,29 +350,14 @@ public class Patient : MonoBehaviour
         // add preopPlans
         foreach (var patientPreopPlanConfig in Config.Instance.configFile.unityConfig.patientModel.preopPlans.Select((Value, Index) => new { Value, Index }))
         {
-            /*GameObject preopPlan = new GameObject(patientPreopPlanConfig.Value.trajectoryName);
-            
-            GameObject sampleSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sampleSphere.transform.parent = preopPlan.transform;
-            sampleSphere.transform.localPosition = patientPreopPlanConfig.Value.entryPoint;
-            sampleSphere.transform.localRotation = Quaternion.identity;
-            sampleSphere.transform.localScale = Vector3.one;
-            */
             Material mat = GetMaterialBasedOnConfig(patientPreopPlanConfig.Value.material);
             mat.color = patientPreopPlanConfig.Value.color.ToColor();
-            //GameObject preopPlan = drawCylinder(patientPreopPlanConfig.Value.entryPoint, patientPreopPlanConfig.Value.exitPoint, patientPreopPlanConfig.Value.trajectoryName, mat, false, patientPreopPlanConfig.Index);
             GameObject preopPlan = drawCylinderEvd(patientPreopPlanConfig.Value.entryPoint, patientPreopPlanConfig.Value.exitPoint, patientPreopPlanConfig.Value.trajectoryName, mat, false, patientPreopPlanConfig.Index);
-            //preopPlan.transform.parent = patientContainer.transform;
             trajectoriesList.Add(preopPlan);
 
             preopPlan.GetComponentInChildren<Renderer>().material = mat;
 
-            //preopPlan.transform.parent = patientContainer.transform;
-            //preopPlan.transform.localPosition = Vector3.zero;
-            //preopPlan.transform.localRotation = Quaternion.identity;
-            //preopPlan.transform.localScale = Vector3.one;
             patientOverlayModels.Add(numberOfObjModels + patientPreopPlanConfig.Index, preopPlan);
-            //modelsNames.Add(preopPlan.name);
         }
 
         HideAllTrajectories();
@@ -471,127 +430,7 @@ public class Patient : MonoBehaviour
         this.GetComponent<PivotCalibration>().reloadTooltipForTargetTrajectory();
     }
 
-    public GameObject drawCylinder(Vector3 StartPoint, Vector3 EndPoint, string name, Material preopMaterial, bool showAll, int index)
-    {
-
-
-        GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        cylinder.name = "Cylinder_" + name;
-        print("NAME:::::" + patientOverlayModels[0].name);
-        cylinder.transform.parent = patientOverlayModels[0].transform;
-        Vector3 cylinderStart = StartPoint;
-        cylinder.transform.localPosition = (cylinderStart + EndPoint) * 0.5f;
-        cylinder.transform.localScale = new Vector3(3f, Vector3.Distance(StartPoint, EndPoint) / 2f, 3f);
-        //cylinder.transform.localPosition
-        Debug.Log("start:" + StartPoint + "\t end:" + EndPoint + "\t midpoint:" + (EndPoint + StartPoint) * 0.5f);
-
-
-        GameObject sposition = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sposition.name = "entry_" + name;
-        sposition.transform.parent = patientOverlayModels[0].transform;
-        sposition.transform.localPosition = StartPoint;
-        sposition.transform.localScale = new Vector3(2f / 1000f, 2f / 1000f, 2f / 1000f);
-        //sposition.GetComponent<Renderer>().material = mat_start;
-        GameObject eposition = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        eposition.name = "exit_" + name;
-        eposition.transform.parent = patientOverlayModels[0].transform;
-        eposition.transform.localPosition = EndPoint;
-        eposition.transform.localScale = new Vector3(2f / 1000f, 2f / 1000f, 2f / 1000f);
-        //eposition.GetComponent<Renderer>().material = mat_end;
-        cylinder.transform.LookAt(eposition.transform);
-        cylinder.transform.RotateAround(cylinder.transform.position, cylinder.transform.right, -90);
-
-
-        sposition.transform.parent = cylinder.transform;
-        eposition.transform.parent = cylinder.transform;
-        eposition.transform.localScale = new Vector3(eposition.transform.localScale.z, eposition.transform.localScale.y, eposition.transform.localScale.z);
-        sposition.transform.localScale = new Vector3(sposition.transform.localScale.z, sposition.transform.localScale.y, sposition.transform.localScale.z);
-        eposition.transform.up = cylinder.transform.up;
-
-        //cylinder.GetComponent<Renderer>().material = mat_winsta_trajectory;
-        // Place disk
-        GameObject disk1 = Instantiate(diskPrefab, cylinder.transform);
-        disk1.name = "disk1";
-        //disk1.transform.localPosition = new Vector3(0f, -0.4f, 0f);
-        disk1.transform.localPosition = new Vector3(0f, -0.6f, 0f);
-
-        disk1.transform.localScale = new Vector3(2f, -0.4f, 2f);
-        foreach (Transform t in disk1.transform)
-        {
-            //t.gameObject.GetComponent<Renderer>().material = mat_winsta_trajectory;
-            t.GetComponentInChildren<Renderer>().material = preopMaterial;
-        }
-        GameObject disk2 = Instantiate(diskPrefab, cylinder.transform);
-        disk2.name = "disk2";
-        //disk2.transform.localPosition = new Vector3(0f, 0.4f, 0f);
-        disk2.transform.localPosition = new Vector3(0f, 0.2f, 0f);
-
-        disk2.transform.localScale = new Vector3(4f, -0.4f, 4f);
-        foreach (Transform t in disk2.transform)
-        {
-            //t.gameObject.GetComponent<Renderer>().material = mat_winsta_trajectory;
-            t.GetComponentInChildren<Renderer>().material = preopMaterial;
-        }
-        GameObject disk3 = Instantiate(diskPrefab, cylinder.transform);
-        disk3.name = "disk3";
-        //disk3.transform.localPosition = new Vector3(0f, 0.0f, 0f);
-        disk3.transform.localPosition = disk1.transform.localPosition - eposition.transform.localPosition + sposition.transform.localPosition;
-
-        disk3.transform.localScale = new Vector3(2f, -0.4f, 2f);
-        foreach (Transform t in disk3.transform)
-        {
-            //t.gameObject.GetComponent<Renderer>().material = mat_winsta_trajectory;
-            t.GetComponentInChildren<Renderer>().material = preopMaterial;
-        }
-        GameObject disk4 = Instantiate(diskPrefab, cylinder.transform);
-        disk4.name = "disk4";
-        //disk3.transform.localPosition = new Vector3(0f, 0.0f, 0f);
-        disk4.transform.localPosition = disk2.transform.localPosition - eposition.transform.localPosition + sposition.transform.localPosition;
-
-        disk4.transform.localScale = new Vector3(4f, -0.4f, 4f);
-        foreach (Transform t in disk4.transform)
-        {
-            //t.gameObject.GetComponent<Renderer>().material = mat_winsta_trajectory;
-            t.GetComponentInChildren<Renderer>().material = preopMaterial;
-        }
-        eposition.transform.parent = patientOverlayModels[0].transform;
-        sposition.transform.parent = patientOverlayModels[0].transform;
-        cylinder.transform.parent = eposition.transform;
-
-        //disk1.transform.parent = eposition.transform;
-        //disk2.transform.parent = eposition.transform;
-        //disk3.transform.parent = eposition.transform;
-        //disk4.transform.parent = eposition.transform;
-
-        Matrix4x4 spositionMatrix = Matrix4x4.TRS(sposition.transform.localPosition, sposition.transform.localRotation, sposition.transform.localScale);
-        Matrix4x4 epositionMatrix = Matrix4x4.TRS(eposition.transform.localPosition, eposition.transform.localRotation, eposition.transform.localScale);
-
-        Debug.Log($"sposition {index}\n{spositionMatrix}");
-        string filePath = System.IO.Path.Combine(Config.Instance.RegistrationFolderOut, $"sposition_{index}.txt");
-        StreamWriter csvWriter = new StreamWriter(filePath);
-        csvWriter.WriteLine("column1, column2, colum3, column4");
-        csvWriter.WriteLine(spositionMatrix.m00 + "," + spositionMatrix.m01 + "," + spositionMatrix.m02 + "," + spositionMatrix.m03);
-        csvWriter.WriteLine(spositionMatrix.m10 + "," + spositionMatrix.m11 + "," + spositionMatrix.m12 + "," + spositionMatrix.m13);
-        csvWriter.WriteLine(spositionMatrix.m20 + "," + spositionMatrix.m21 + "," + spositionMatrix.m22 + "," + spositionMatrix.m23);
-        csvWriter.WriteLine(spositionMatrix.m30 + "," + spositionMatrix.m31 + "," + spositionMatrix.m32 + "," + spositionMatrix.m33);
-        csvWriter.Close();
-
-        Debug.Log($"eposition {index}\n{epositionMatrix}");
-        filePath = System.IO.Path.Combine(Config.Instance.RegistrationFolderOut, $"eposition_{index}.txt");
-        csvWriter = new StreamWriter(filePath);
-        csvWriter.WriteLine("column1, column2, colum3, column4");
-        csvWriter.WriteLine(epositionMatrix.m00 + "," + epositionMatrix.m01 + "," + epositionMatrix.m02 + "," + epositionMatrix.m03);
-        csvWriter.WriteLine(epositionMatrix.m10 + "," + epositionMatrix.m11 + "," + epositionMatrix.m12 + "," + epositionMatrix.m13);
-        csvWriter.WriteLine(epositionMatrix.m20 + "," + epositionMatrix.m21 + "," + epositionMatrix.m22 + "," + epositionMatrix.m23);
-        csvWriter.WriteLine(epositionMatrix.m30 + "," + epositionMatrix.m31 + "," + epositionMatrix.m32 + "," + epositionMatrix.m33);
-        csvWriter.Close();
-
-
-
-        return cylinder;
-        //changePointerRepresentaiton(showAll);
-    }
-
+    // Draw the planning trajectory guiding cylinders (tuned for the EVD application)
     public GameObject drawCylinderEvd(Vector3 StartPoint, Vector3 EndPoint, string name, Material preopMaterial, bool showAll, int index)
     {
 
@@ -601,11 +440,8 @@ public class Patient : MonoBehaviour
         print("NAME:::::" + patientOverlayModels[0].name);
         cylinder.transform.parent = patientOverlayModels[0].transform;
         Vector3 cylinderStart = StartPoint;
-        //cylinder.transform.localPosition = (cylinderStart + EndPoint) * 0.5f;
         cylinder.transform.localPosition = cylinderStart;
-        //cylinder.transform.localScale = new Vector3(3f, Vector3.Distance(StartPoint, EndPoint) / 2f, 3f);
         cylinder.transform.localScale = new Vector3(3f, Vector3.Distance(StartPoint, EndPoint), 3f);
-        //cylinder.transform.localPosition
         Debug.Log("start:" + StartPoint + "\t end:" + EndPoint + "\t midpoint:" + (EndPoint + StartPoint) * 0.5f);
 
 
@@ -614,13 +450,11 @@ public class Patient : MonoBehaviour
         sposition.transform.parent = patientOverlayModels[0].transform;
         sposition.transform.localPosition = StartPoint;
         sposition.transform.localScale = new Vector3(2f / 1000f, 2f / 1000f, 2f / 1000f);
-        //sposition.GetComponent<Renderer>().material = mat_start;
         GameObject eposition = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         eposition.name = "exit_" + name;
         eposition.transform.parent = patientOverlayModels[0].transform;
         eposition.transform.localPosition = EndPoint;
         eposition.transform.localScale = new Vector3(2f / 1000f, 2f / 1000f, 2f / 1000f);
-        //eposition.GetComponent<Renderer>().material = mat_end;
         cylinder.transform.LookAt(eposition.transform);
         cylinder.transform.RotateAround(cylinder.transform.position, cylinder.transform.right, -90);
 
@@ -631,7 +465,6 @@ public class Patient : MonoBehaviour
         sposition.transform.localScale = new Vector3(sposition.transform.localScale.z, sposition.transform.localScale.y, sposition.transform.localScale.z);
         eposition.transform.up = cylinder.transform.up;
 
-        //cylinder.GetComponent<Renderer>().material = mat_winsta_trajectory;
         // Place disk
         if (Config.Instance.configFile.unityConfig.disk1Active)
         {
@@ -639,15 +472,10 @@ public class Patient : MonoBehaviour
 
             GameObject disk1 = Instantiate(diskPrefab, cylinder.transform);
             disk1.name = "disk1";
-            //disk1.transform.localPosition = new Vector3(0f, -0.4f, 0f);
-            //disk1.transform.localPosition = new Vector3(0f, -0.6f, 0f);
             disk1.transform.localPosition = new Vector3(0f, -0.7f, 0f);
-
-            //disk1.transform.localScale = new Vector3(2f, -0.4f, 2f);
             disk1.transform.localScale = new Vector3(diamter, 0.1f, diamter);
             foreach (Transform t in disk1.transform)
             {
-                //t.gameObject.GetComponent<Renderer>().material = mat_winsta_trajectory;
                 t.GetComponentInChildren<Renderer>().material = preopMaterial;
             }
             // only activate after insertion
@@ -660,15 +488,10 @@ public class Patient : MonoBehaviour
 
             GameObject disk2 = Instantiate(diskPrefab, cylinder.transform);
             disk2.name = "disk2";
-            //disk2.transform.localPosition = new Vector3(0f, 0.4f, 0f);
-            //disk2.transform.localPosition = new Vector3(0f, 0.2f, 0f);
             disk2.transform.localPosition = new Vector3(0f, -0.4f, 0f);
-
-            //disk2.transform.localScale = new Vector3(4f, -0.4f, 4f);
             disk2.transform.localScale = new Vector3(diamter, 0.1f, diamter);
             foreach (Transform t in disk2.transform)
             {
-                //t.gameObject.GetComponent<Renderer>().material = mat_winsta_trajectory;
                 t.GetComponentInChildren<Renderer>().material = preopMaterial;
             }
             // only activate after starting the insertion
@@ -681,70 +504,25 @@ public class Patient : MonoBehaviour
 
             GameObject disk3 = Instantiate(diskPrefab, cylinder.transform);
             disk3.name = "disk3";
-            //disk3.transform.localPosition = new Vector3(0f, 0.0f, 0f);
             disk3.transform.localPosition = new Vector3(0f, -0.1f, 0f);
 
             disk3.transform.localScale = new Vector3(diamter, 0.1f, diamter);
             foreach (Transform t in disk3.transform)
             {
-                //t.gameObject.GetComponent<Renderer>().material = mat_winsta_trajectory;
                 t.GetComponentInChildren<Renderer>().material = preopMaterial;
             }
             // only activate after starting the insertion
             disk3.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
         }
         
-        //GameObject disk4 = Instantiate(diskPrefab, cylinder.transform);
-        //disk4.name = "disk4";
-        ////disk3.transform.localPosition = new Vector3(0f, 0.0f, 0f);
-        //disk4.transform.localPosition = disk2.transform.localPosition - eposition.transform.localPosition + sposition.transform.localPosition;
-
-        //disk4.transform.localScale = new Vector3(4f, -0.4f, 4f);
-        //foreach (Transform t in disk4.transform)
-        //{
-        //    //t.gameObject.GetComponent<Renderer>().material = mat_winsta_trajectory;
-        //    t.GetComponentInChildren<Renderer>().material = preopMaterial;
-        //}
         eposition.transform.parent = patientOverlayModels[0].transform;
         sposition.transform.parent = patientOverlayModels[0].transform;
         cylinder.transform.parent = eposition.transform;
 
-        //disk1.transform.parent = eposition.transform;
-        //disk2.transform.parent = eposition.transform;
-        //disk3.transform.parent = eposition.transform;
-        //disk4.transform.parent = eposition.transform;
-
-        Matrix4x4 spositionMatrix = Matrix4x4.TRS(sposition.transform.localPosition, sposition.transform.localRotation, sposition.transform.localScale);
-        Matrix4x4 epositionMatrix = Matrix4x4.TRS(eposition.transform.localPosition, eposition.transform.localRotation, eposition.transform.localScale);
-
-        Debug.Log($"sposition {index}\n{spositionMatrix}");
-        string filePath = System.IO.Path.Combine(Config.Instance.RegistrationFolderOut, $"sposition_{index}.txt");
-        StreamWriter csvWriter = new StreamWriter(filePath);
-        csvWriter.WriteLine("column1, column2, colum3, column4");
-        csvWriter.WriteLine(spositionMatrix.m00 + "," + spositionMatrix.m01 + "," + spositionMatrix.m02 + "," + spositionMatrix.m03);
-        csvWriter.WriteLine(spositionMatrix.m10 + "," + spositionMatrix.m11 + "," + spositionMatrix.m12 + "," + spositionMatrix.m13);
-        csvWriter.WriteLine(spositionMatrix.m20 + "," + spositionMatrix.m21 + "," + spositionMatrix.m22 + "," + spositionMatrix.m23);
-        csvWriter.WriteLine(spositionMatrix.m30 + "," + spositionMatrix.m31 + "," + spositionMatrix.m32 + "," + spositionMatrix.m33);
-        csvWriter.Close();
-
-        Debug.Log($"eposition {index}\n{epositionMatrix}");
-        filePath = System.IO.Path.Combine(Config.Instance.RegistrationFolderOut, $"eposition_{index}.txt");
-        csvWriter = new StreamWriter(filePath);
-        csvWriter.WriteLine("column1, column2, colum3, column4");
-        csvWriter.WriteLine(epositionMatrix.m00 + "," + epositionMatrix.m01 + "," + epositionMatrix.m02 + "," + epositionMatrix.m03);
-        csvWriter.WriteLine(epositionMatrix.m10 + "," + epositionMatrix.m11 + "," + epositionMatrix.m12 + "," + epositionMatrix.m13);
-        csvWriter.WriteLine(epositionMatrix.m20 + "," + epositionMatrix.m21 + "," + epositionMatrix.m22 + "," + epositionMatrix.m23);
-        csvWriter.WriteLine(epositionMatrix.m30 + "," + epositionMatrix.m31 + "," + epositionMatrix.m32 + "," + epositionMatrix.m33);
-        csvWriter.Close();
-
-        //// only activate after starting the insertion
-        //disk1.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //disk2.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        //disk3.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-
         return cylinder;
     }
 
+    // Trajectories for now only used with Vuforia markers; TODO: make it agnostic to the marker tracking mode
     public void nextTrajectoryButton()
     {
         if (selectedTrajectoryIndex + 1 >= trajectoriesList.Count)
@@ -753,14 +531,11 @@ public class Patient : MonoBehaviour
         }
         else
         {
-            //if (selectedTrajectoryIndex >= 0)
-            //{
             foreach (GameObject trajectory in trajectoriesList)
             {
                 trajectory.SetActive(false);
             }
-            //}
-                //trajectoriesList[selectedTrajectoryIndex].SetActive(false);
+
             selectedTrajectoryIndex++;
             trajectoriesList[selectedTrajectoryIndex].SetActive(true);
 
@@ -795,8 +570,6 @@ public class Patient : MonoBehaviour
             Vector3 cylScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localScale.z);
 
             traj.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            //tooltipCylinder.transform.localScale = traj.transform.localScale;//new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            //tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, traj.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
             tooltipCylinder.transform.localPosition = new Vector3(traj.transform.localPosition.x, traj.transform.localScale.y, traj.transform.localPosition.z);
             tooltipCylinder.transform.localRotation = traj.transform.localRotation;
             tooltipCylinder.transform.localScale = traj.transform.localScale;
@@ -804,42 +577,18 @@ public class Patient : MonoBehaviour
             GameObject disk1 = traj.transform.GetChild(0).gameObject;
             GameObject disk2 = traj.transform.GetChild(1).gameObject;
 
-            //GameObject disk1Drill = Instantiate(disk1, tooltipCylinder.transform);
-            //GameObject disk2Drill = Instantiate(disk2, tooltipCylinder.transform);
-            //disk1Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = tooltipCylinder.GetComponentInChildren<Renderer>().material.color;
-            //disk2Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = tooltipCylinder.GetComponentInChildren<Renderer>().material.color;
-
             tooltipCylinder.transform.localRotation = cylRot;
-            //tooltipCylinder.transform.localScale = cylScale;
             tooltipCylinder.transform.localPosition = new Vector3(cylPos.x, traj.transform.localScale.y, cylPos.z);
 
             traj.transform.parent = trajParent;
-            /*GameObject tooltipCylinder=null;
-            foreach (Transform child in traj.transform)
-            {
-                tooltipCylinder = child.gameObject;
-                if (tooltipCylinder.name == "tooltip")
-                {
-                    tooltipCylinder = tooltipCylinder.transform.GetChild(0).GetChild(0).gameObject;
-                    break;
-                }
-            }
-            traj.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            tooltipCylinder.transform.localScale = traj.transform.localScale;//new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, traj.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
-            */
 
             // for evd trajectories (makes it shorter (half) than planning
             tooltipCylinder.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y / 2, tooltipCylinder.transform.localScale.z);
             tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, tooltipCylinder.transform.localPosition.y - tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localPosition.z);
-            //disk1Drill.transform.localScale = new Vector3(disk1Drill.transform.localScale.x, disk1Drill.transform.localScale.y * 2, disk1Drill.transform.localScale.z);
-            //disk2Drill.transform.localScale = new Vector3(disk2Drill.transform.localScale.x, disk2Drill.transform.localScale.y * 2, disk2Drill.transform.localScale.z);
-            //disk1Drill.transform.localPosition = new Vector3(disk1Drill.transform.localPosition.x, disk1Drill.transform.localPosition.y - (disk1Drill.transform.localScale.y / 2), disk1Drill.transform.localPosition.z);
-            //disk2Drill.transform.localPosition = new Vector3(disk2Drill.transform.localPosition.x, disk2Drill.transform.localPosition.y - (disk2Drill.transform.localScale.y * 1.5f), disk1Drill.transform.localPosition.z);
-
         }
     }
 
+    // Trajectories for now only used with Vuforia markers; TODO: make it agnostic to the marker tracking mode
     public void previousTrajectoryButton()
     {
         if (selectedTrajectoryIndex - 1 < 0)
@@ -848,7 +597,6 @@ public class Patient : MonoBehaviour
         }
         else
         {
-            //trajectoriesList[selectedTrajectoryIndex].SetActive(false);
             foreach (GameObject trajectory in trajectoriesList)
             {
                 trajectory.SetActive(false);
@@ -887,8 +635,6 @@ public class Patient : MonoBehaviour
             Vector3 cylScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localScale.z);
 
             traj.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            //tooltipCylinder.transform.localScale = traj.transform.localScale;//new Vector3(tooltipCylinder.transform.localScale.x, traj.transform.localScale.y, tooltipCylinder.transform.localScale.z);
-            //tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, traj.transform.localPosition.y, tooltipCylinder.transform.localPosition.z);
             tooltipCylinder.transform.localPosition = new Vector3(traj.transform.localPosition.x, traj.transform.localScale.y, traj.transform.localPosition.z);
             tooltipCylinder.transform.localRotation = traj.transform.localRotation;
             tooltipCylinder.transform.localScale = traj.transform.localScale;
@@ -896,13 +642,7 @@ public class Patient : MonoBehaviour
             GameObject disk1 = traj.transform.GetChild(0).gameObject;
             GameObject disk2 = traj.transform.GetChild(1).gameObject;
 
-            //GameObject disk1Drill = Instantiate(disk1, tooltipCylinder.transform);
-            //GameObject disk2Drill = Instantiate(disk2, tooltipCylinder.transform);
-            //disk1Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = tooltipCylinder.GetComponentInChildren<Renderer>().material.color;
-            //disk2Drill.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = tooltipCylinder.GetComponentInChildren<Renderer>().material.color;
-
             tooltipCylinder.transform.localRotation = cylRot;
-            //tooltipCylinder.transform.localScale = cylScale;
             tooltipCylinder.transform.localPosition = new Vector3(cylPos.x, traj.transform.localScale.y, cylPos.z);
 
             traj.transform.parent = trajParent;
@@ -910,11 +650,6 @@ public class Patient : MonoBehaviour
             // for evd trajectories (makes it shorter (half) than planning
             tooltipCylinder.transform.localScale = new Vector3(tooltipCylinder.transform.localScale.x, tooltipCylinder.transform.localScale.y / 2, tooltipCylinder.transform.localScale.z);
             tooltipCylinder.transform.localPosition = new Vector3(tooltipCylinder.transform.localPosition.x, tooltipCylinder.transform.localPosition.y - tooltipCylinder.transform.localScale.y, tooltipCylinder.transform.localPosition.z);
-            //disk1Drill.transform.localScale = new Vector3(disk1Drill.transform.localScale.x, disk1Drill.transform.localScale.y * 2, disk1Drill.transform.localScale.z);
-            //disk2Drill.transform.localScale = new Vector3(disk2Drill.transform.localScale.x, disk2Drill.transform.localScale.y * 2, disk2Drill.transform.localScale.z);
-            //disk1Drill.transform.localPosition = new Vector3(disk1Drill.transform.localPosition.x, disk1Drill.transform.localPosition.y - (disk1Drill.transform.localScale.y / 2), disk1Drill.transform.localPosition.z);
-            //disk2Drill.transform.localPosition = new Vector3(disk2Drill.transform.localPosition.x, disk2Drill.transform.localPosition.y - (disk2Drill.transform.localScale.y * 1.5f), disk1Drill.transform.localPosition.z);
-
         }
     }
 
@@ -995,7 +730,6 @@ public class Patient : MonoBehaviour
                 {
                     patientMarkerName = vuforiaMarkerConfig.name.Substring(0, vuforiaMarkerConfig.name.IndexOf("."));
                 }
-                //else if(vuforiaMarkerConfig.isTool && vuforiaMarkerConfig.toolCalibration.tipOffset.x != 0f)
                 else if (vuforiaMarkerConfig.isTool)
                 {
                     pointerMarkerName = vuforiaMarkerConfig.name.Substring(0, vuforiaMarkerConfig.name.IndexOf("."));
@@ -1035,35 +769,6 @@ public class Patient : MonoBehaviour
         patientMarker = GameObject.Find(trackingModeActive + patientMarkerName);
         pointerMarker = GameObject.Find(trackingModeActive + pointerMarkerName);
         Debug.Log(patientMarker.name + "   " + pointerMarker.name);
-
-        //// Only needed for the experiments to attach model for manual registration save the matrix and detach it again (so drifting is also measured)
-        //if (Config.Instance.configFile.unityConfig.saveMatrixButNotAttach && scriptsGameObject.GetComponent<NDIconnection>().callingToAttachForManualRegistration)
-        //{
-        //    Debug.Log("saving matrix and restoring global patient pose..");
-        //    Vector3 patientPositionInWorldSpace = patientContainer.transform.position;
-        //    Quaternion patientRotationInWorldSpace = patientContainer.transform.rotation;
-        //    Debug.Log("before position: " + patientPositionInWorldSpace);
-        //    Debug.Log("before rotation: " + patientRotationInWorldSpace.eulerAngles);
-        //    patientContainer.transform.parent = patientMarker.transform;
-        //    Matrix4x4 manualRegistrationMatrix = Matrix4x4.TRS(patientContainer.transform.localPosition, patientContainer.transform.localRotation, Vector3.one);
-        //    Debug.Log("matrix to save: " + manualRegistrationMatrix);
-        //    SaveRegistrationMatrix(manualRegistrationMatrix);
-        //    Matrix4x4 ct_origin_Matrix = Matrix4x4.TRS(patientContainer.transform.GetChild(0).localPosition, patientContainer.transform.GetChild(0).localRotation, Vector3.one);
-        //    SaveMatrix(ct_origin_Matrix, patientContainer.transform.GetChild(0).gameObject.name);
-        //    //patientContainer.transform.parent = null;
-        //    patientContainer.transform.position = patientPositionInWorldSpace;
-        //    patientContainer.transform.rotation = patientRotationInWorldSpace;
-        //    Debug.Log("after position: " + patientContainer.transform.position);
-        //    Debug.Log("after rotation: " + patientContainer.transform.rotation.eulerAngles);
-
-        //    patientAttachedToMarker = false;
-        //}
-        //else
-        //{
-        //    patientContainer.transform.parent = patientMarker.transform;
-
-        //    patientAttachedToMarker = true;
-        //}
 
         patientContainer.transform.parent = patientMarker.transform;
         patientAttachedToMarker = true;
@@ -1283,65 +988,7 @@ public class Patient : MonoBehaviour
 
         }
 
-        //Config.Instance.configFile.unityConfig.patientModel.distFeedbackMenuPosition = distanceFeedbackMenu.transform.localPosition;
-
         Config.Instance.SaveConfigFile();
-    }
-
-    public void LandmarksOn()
-    {
-        if (listOfLandmarks.Count > 0)
-        {
-            foreach (var landmark in listOfLandmarks)
-            {
-                landmark.SetActive(true);
-                landmark.transform.GetChild(0).rotation = Quaternion.identity;
-            }
-            return;
-        }
-
-        // empty placeholder
-        GameObject registrationSpheres = new GameObject("registrationSpheres");
-        Material spheresMaterial = GetMaterialBasedOnConfig(Config.Instance.configFile.unityConfig.landmarksRegistration.material);
-        Color spheresColor = Config.Instance.configFile.unityConfig.landmarksRegistration.color.ToColor();
-        float spheresSize = Config.Instance.configFile.unityConfig.landmarksRegistration.sphereRadious * (1.0f / Config.Instance.configFile.unityConfig.patientModel.scale);
-
-        registrationSpheres.transform.parent = patientContainer.transform;
-        registrationSpheres.transform.localPosition = patientContainerCenter;
-        registrationSpheres.transform.localRotation = Quaternion.identity;
-        registrationSpheres.transform.localScale = Vector3.one;
-
-        var preopLandmarks = landmarksBasedRegistration.GetPreopLandmarks();
-
-        for (int i = 0; i < preopLandmarks.Count; i++)
-        {
-            GameObject landmark = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            landmark.transform.parent = registrationSpheres.transform;
-            landmark.transform.localPosition = preopLandmarks[i] * (1.0f / Config.Instance.configFile.unityConfig.patientModel.scale);
-            landmark.transform.localScale = Vector3.one * spheresSize;
-            landmark.GetComponent<Renderer>().material = spheresMaterial;
-            landmark.GetComponent<Renderer>().material.color = spheresColor;
-            landmark.transform.gameObject.SetActive(true);
-
-            GameObject landmarkToolTip = GameObject.Instantiate(toolTipPrefab);
-            landmarkToolTip.transform.parent = landmark.transform;
-            landmarkToolTip.transform.localPosition = Vector3.zero;
-            landmarkToolTip.transform.rotation = Quaternion.identity;
-            landmarkToolTip.transform.localScale = Vector3.one * (1.0f / Config.Instance.configFile.unityConfig.patientModel.scale) * 0.25f;
-            //landmarkToolTip.GetComponent<ToolTip>().ToolTipText = "Point #" + (i + 1).ToString();
-            //landmarkToolTip.GetComponent<ToolTip>().ContentScale = 1;
-            //landmarkToolTip.GetComponent<ToolTip>().FontSize = 20;
-
-            listOfLandmarks.Add(landmark);
-        }
-    }
-
-    public void LandmarksOff()
-    {
-        if (listOfLandmarks.Count > 0)
-        {
-            foreach (var landmark in listOfLandmarks) { landmark.SetActive(false); }
-        }
     }
 
     public void AcquirePointerTipPosition()
@@ -1351,29 +998,7 @@ public class Patient : MonoBehaviour
 
         if (pointerMarker != null && patientMarker != null)
         {
-            //var intraopLandmarks = landmarksBasedRegistration.GetIntraopLandmarks();
-            //var numberOfLandmarks = landmarksBasedRegistration.GetNumberOfLandMarks();
-
-            //if (intraopLandmarks.Count < numberOfLandmarks)
-            //{
-            //    Matrix4x4 patientMarkerToWorld = Matrix4x4.TRS(patientMarker.transform.position, patientMarker.transform.rotation, patientMarker.transform.localScale);
-            //    Vector3 tipInPatient = patientMarkerToWorld.inverse.MultiplyPoint(pointerMarker.transform.GetChild(1).position);
-            //    landmarksBasedRegistration.AddIntraopPatientPoint(tipInPatient);
-            //    Debug.Log(tipInPatient.x + " , " + tipInPatient.y + " , " + tipInPatient.z);
-
-            //    // create a small sphere indicating the acquired point
-            //    GameObject tipAcquiredPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            //    tipAcquiredPoint.transform.parent = patientMarker.transform;
-            //    tipAcquiredPoint.transform.localPosition = tipInPatient;
-            //    tipAcquiredPoint.transform.localScale = Vector3.one * Config.Instance.configFile.unityConfig.landmarksRegistration.sphereRadious;
-            //    tipAcquiredPoint.GetComponent<Renderer>().material = GetMaterialBasedOnConfig(Config.Instance.configFile.unityConfig.landmarksRegistration.material);
-            //    tipAcquiredPoint.GetComponent<Renderer>().material.color = Config.Instance.configFile.unityConfig.landmarksRegistration.color.ToColor();
-
-            //    listOfAcquiredTipPoints.Add(tipAcquiredPoint);
-
-            //scriptsGameObject.GetComponent<NDIconnection>().RecordPoseData(true);
             useRecordedPointsForRegistration = true;
-            //}
         }
     }
 
@@ -1477,16 +1102,6 @@ public class Patient : MonoBehaviour
             }
         }
 
-        //print(patientContainer.transform.GetChild(0).gameObject.name);
-        //distanceFeedbackMenu.transform.parent = patientContainer.transform;
-        //distanceFeedbackMenu.transform.localPosition = Vector3.zero;
-        //print(distanceFeedbackMenu.transform.localPosition);
-        //GameObject parentPatientModel = patientContainer.transform.GetChild(0).gameObject;
-        //distanceFeedbackMenu.transform.parent = parentPatientModel.transform;
-        //distanceFeedbackMenu.transform.localPosition = new Vector3(261.868f, 113.0201f, 1713.778f);
-        //distanceFeedbackMenu.transform.localPosition = Config.Instance.configFile.unityConfig.patientModel.distFeedbackMenuPosition;
-        //print(distanceFeedbackMenu.transform.localPosition);
-
         isPatientaligned = true;
 
         BoundingBoxOff();
@@ -1504,47 +1119,6 @@ public class Patient : MonoBehaviour
         listOfAcquiredTipPoints.Clear();
         listOfLandmarks.Clear();
         landmarksBasedRegistration.ClearIntraopLandmarks();
-    }
-
-    void SaveMatrix(Matrix4x4 matrixToSave, string game_object_name)
-    {
-
-        string trackingMode = trackingModeActive;
-        var numberOfLandmarks = landmarksBasedRegistration.GetNumberOfLandMarks();
-        string prefix = $"_{numberOfLandmarks}_{trackingMode}_{registrationCounter}";
-
-        string filePath = System.IO.Path.Combine(Config.Instance.RegistrationFolderOut, game_object_name + prefix + ".txt");
-
-        StreamWriter csvWriter = new StreamWriter(filePath);
-        csvWriter.WriteLine("column1, column2, colum3, column4");
-        csvWriter.WriteLine(matrixToSave.m00 + "," + matrixToSave.m01 + "," + matrixToSave.m02 + "," + matrixToSave.m03);
-        csvWriter.WriteLine(matrixToSave.m10 + "," + matrixToSave.m11 + "," + matrixToSave.m12 + "," + matrixToSave.m13);
-        csvWriter.WriteLine(matrixToSave.m20 + "," + matrixToSave.m21 + "," + matrixToSave.m22 + "," + matrixToSave.m23);
-        csvWriter.WriteLine(matrixToSave.m30 + "," + matrixToSave.m31 + "," + matrixToSave.m32 + "," + matrixToSave.m33);
-        csvWriter.Close();
-        Debug.Log($"saved registration matrix \n{matrixToSave}");
-    }
-
-    void SaveRegistrationMatrix(Matrix4x4 registrationMatrix)
-    {
-        DateTime currentTime = DateTime.Now;
-        string time = currentTime.ToString("_HH_mm_ss");
-
-        registrationCounter++;
-
-        string trackingMode = trackingModeActive;
-        string prefix = $"_manual_{trackingMode}_{registrationCounter}";
-
-        string filePath = System.IO.Path.Combine(Config.Instance.RegistrationFolderOut, Config.Instance.configFile.unityConfig.registration.registrationMatrix + prefix + ".txt");
-
-        StreamWriter csvWriter = new StreamWriter(filePath);
-        csvWriter.WriteLine("column1, column2, colum3, column4");
-        csvWriter.WriteLine(registrationMatrix.m00 + "," + registrationMatrix.m01 + "," + registrationMatrix.m02 + "," + registrationMatrix.m03);
-        csvWriter.WriteLine(registrationMatrix.m10 + "," + registrationMatrix.m11 + "," + registrationMatrix.m12 + "," + registrationMatrix.m13);
-        csvWriter.WriteLine(registrationMatrix.m20 + "," + registrationMatrix.m21 + "," + registrationMatrix.m22 + "," + registrationMatrix.m23);
-        csvWriter.WriteLine(registrationMatrix.m30 + "," + registrationMatrix.m31 + "," + registrationMatrix.m32 + "," + registrationMatrix.m33);
-        csvWriter.Close();
-        Debug.Log($"saved registration matrix \n{registrationMatrix}"); 
     }
 
     void SaveRegistrationMatrix()

@@ -323,33 +323,6 @@ public class MLArucoTracking : MonoBehaviour
         right.transform.localScale = new Vector3(0.001f, 0.001f, markerSize + 0.002f);
         right.transform.gameObject.SetActive(true);
         right.GetComponent<Renderer>().material.color = color;
-
-        // testing local coordinates of aruco markers
-        // createTestingSpheres(markerGameObject, markerSize);
-    }
-
-    void createTestingSpheres(GameObject markerParentGameObject, float markerSize)
-    {
-        GameObject xSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        xSphere.name = "xAxis";
-        xSphere.transform.parent = markerParentGameObject.transform;
-        xSphere.transform.localPosition = new Vector3(markerSize / 2f, 0, 0);
-        xSphere.transform.localScale = 0.01f * Vector3.one;
-        xSphere.GetComponent<Renderer>().material.color = Color.red;
-
-        GameObject ySphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        ySphere.name = "yAxis";
-        ySphere.transform.parent = markerParentGameObject.transform;
-        ySphere.transform.localPosition = new Vector3(0, markerSize / 2f, 0);
-        ySphere.transform.localScale = 0.01f * Vector3.one;
-        ySphere.GetComponent<Renderer>().material.color = Color.green;
-
-        GameObject zSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        zSphere.name = "yAxis";
-        zSphere.transform.parent = markerParentGameObject.transform;
-        zSphere.transform.localPosition = new Vector3(0, 0, markerSize / 2f);
-        zSphere.transform.localScale = 0.01f * Vector3.one;
-        zSphere.GetComponent<Renderer>().material.color = Color.blue;
     }
 
 #endif

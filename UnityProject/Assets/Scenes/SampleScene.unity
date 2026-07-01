@@ -48226,7 +48226,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -3.8, y: -82.5}
+  m_AnchoredPosition: {x: -3.8, y: -88.8}
   m_SizeDelta: {x: 100, y: 3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &821579180
@@ -50709,7 +50709,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -31}
+  m_AnchoredPosition: {x: 0, y: -35.6}
   m_SizeDelta: {x: 100, y: 3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &883166896
@@ -96344,7 +96344,7 @@ MonoBehaviour:
   <UseFarDwell>k__BackingField: 0
   <FarDwellTime>k__BackingField: 1
   allowSelectByVoice: 1
-  speechRecognitionKeyword: Test
+  speechRecognitionKeyword: Pick Point
   <VoiceRequiresFocus>k__BackingField: 0
   <SelectRequiresHover>k__BackingField: 0
   <IsToggled>k__BackingField:
@@ -119278,7 +119278,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -59.7}
+  m_AnchoredPosition: {x: 0, y: -62.7}
   m_SizeDelta: {x: 100, y: 3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1983229647
@@ -141782,7 +141782,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -82.5}
+  m_AnchoredPosition: {x: 0, y: -86.8}
   m_SizeDelta: {x: 100, y: 3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7375644620346057302

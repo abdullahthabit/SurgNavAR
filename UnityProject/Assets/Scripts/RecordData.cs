@@ -6,6 +6,7 @@ using System.Diagnostics;
 using TMPro;
 using System;
 
+// class used for recording data mainly for offline experimentaiton and analysis
 public class RecordData : MonoBehaviour
 {
 	StreamWriter csvWriter;
@@ -29,16 +30,11 @@ public class RecordData : MonoBehaviour
 	public float tipToAxisDist;
 	public float angleDeviation;
 
-	//public TextMeshProUGUI textDistEntry;
 	public GameObject distanceFeedbackMenu;
     public TextMeshProUGUI textDistExit;
     public TextMeshProUGUI textDistAxis;
 	public TextMeshProUGUI textAngle;
 
-	//string distEntryValue;
-	//string distExitValue;
-	//string distAxisValue;
-	//string angleValue;
 	GameObject drill;
 
 	GameObject hl2pointer;
@@ -71,31 +67,28 @@ public class RecordData : MonoBehaviour
 			tipToAxisDist = CalculateDistancePointToLine(drillEndPoint.transform.position, planningEntryPoint.transform.position, planningEndPoint.transform.position) * 1000;
 			angleDeviation = Vector3.Angle(drillEndPoint.transform.up, planningEndPoint.transform.up);
 
-			//print(tipToEntryDist.ToString("F1"));
-			//print(tipToExitDist.ToString("F1"));
-			//print(tipToAxisDist.ToString("F1"));
-
-			//textDistEntry.GetComponent<TextMeshProUGUI>().text = tipToEntryDist.ToString("F1");
 			textDistExit.GetComponent<TextMeshProUGUI>().text = tipToExitDist.ToString("F1");
 			textDistAxis.GetComponent<TextMeshProUGUI>().text = tipToAxisDist.ToString("F1");
 			textAngle.GetComponent<TextMeshProUGUI>().text = angleDeviation.ToString("F1");
+			
+			// Recording markers poses can be used for experimentation and validation
 
-			csvWriter.WriteLine(drillEndPoint.transform.position.x + "," + drillEndPoint.transform.position.y + "," + drillEndPoint.transform.position.z + ","
-			+ drillEndPoint.transform.up.x + "," + drillEndPoint.transform.up.y + "," + drillEndPoint.transform.up.z + ","
-			+ planningEndPoint.transform.position.x + "," + planningEndPoint.transform.position.y + "," + planningEndPoint.transform.position.z + ","
-			+ planningEndPoint.transform.up.x + "," + planningEndPoint.transform.up.y + "," + planningEndPoint.transform.up.z + ","
-			+ stopwatch.ElapsedMilliseconds.ToString() + "," + isNDIcameraMoving + "," + angleDeviation + ","
-            + drillEntryPoint.transform.position.x + "," + drillEntryPoint.transform.position.y + "," + drillEntryPoint.transform.position.z + ","
-			+ planningEntryPoint.transform.position.x + "," + planningEntryPoint.transform.position.y + "," + planningEntryPoint.transform.position.z + ","
-			+ tipToEntryDist + "," + tipToExitDist + "," + tipToAxisDist + "," + phaseIndex + "," + drillIndex + "," + insertionStatus + ","
-			+ hl2pointer.transform.position.x + "," + hl2pointer.transform.position.y + "," + hl2pointer.transform.position.z + ","
-			+ hl2pointer.transform.rotation.x + "," + hl2pointer.transform.rotation.y + "," + hl2pointer.transform.rotation.z + "," + hl2pointer.transform.rotation.w + ","
-			+ hl2patient.transform.position.x + "," + hl2patient.transform.position.y + "," + hl2patient.transform.position.z + ","
-			+ hl2patient.transform.rotation.x + "," + hl2patient.transform.rotation.y + "," + hl2patient.transform.rotation.z + "," + hl2patient.transform.rotation.w + ","
-			+ ndipointer.transform.position.x + "," + ndipointer.transform.position.y + "," + ndipointer.transform.position.z + ","
-			+ ndipointer.transform.rotation.x + "," + ndipointer.transform.rotation.y + "," + ndipointer.transform.rotation.z + "," + ndipointer.transform.rotation.w + ","
-			+ ndipatient.transform.position.x + "," + ndipatient.transform.position.y + "," + ndipatient.transform.position.z + ","
-			+ ndipatient.transform.rotation.x + "," + ndipatient.transform.rotation.y + "," + ndipatient.transform.rotation.z + "," + ndipatient.transform.rotation.w);
+			//csvWriter.WriteLine(drillEndPoint.transform.position.x + "," + drillEndPoint.transform.position.y + "," + drillEndPoint.transform.position.z + ","
+			//+ drillEndPoint.transform.up.x + "," + drillEndPoint.transform.up.y + "," + drillEndPoint.transform.up.z + ","
+			//+ planningEndPoint.transform.position.x + "," + planningEndPoint.transform.position.y + "," + planningEndPoint.transform.position.z + ","
+			//+ planningEndPoint.transform.up.x + "," + planningEndPoint.transform.up.y + "," + planningEndPoint.transform.up.z + ","
+			//+ stopwatch.ElapsedMilliseconds.ToString() + "," + isNDIcameraMoving + "," + angleDeviation + ","
+   //         + drillEntryPoint.transform.position.x + "," + drillEntryPoint.transform.position.y + "," + drillEntryPoint.transform.position.z + ","
+			//+ planningEntryPoint.transform.position.x + "," + planningEntryPoint.transform.position.y + "," + planningEntryPoint.transform.position.z + ","
+			//+ tipToEntryDist + "," + tipToExitDist + "," + tipToAxisDist + "," + phaseIndex + "," + drillIndex + "," + insertionStatus + ","
+			//+ hl2pointer.transform.position.x + "," + hl2pointer.transform.position.y + "," + hl2pointer.transform.position.z + ","
+			//+ hl2pointer.transform.rotation.x + "," + hl2pointer.transform.rotation.y + "," + hl2pointer.transform.rotation.z + "," + hl2pointer.transform.rotation.w + ","
+			//+ hl2patient.transform.position.x + "," + hl2patient.transform.position.y + "," + hl2patient.transform.position.z + ","
+			//+ hl2patient.transform.rotation.x + "," + hl2patient.transform.rotation.y + "," + hl2patient.transform.rotation.z + "," + hl2patient.transform.rotation.w + ","
+			//+ ndipointer.transform.position.x + "," + ndipointer.transform.position.y + "," + ndipointer.transform.position.z + ","
+			//+ ndipointer.transform.rotation.x + "," + ndipointer.transform.rotation.y + "," + ndipointer.transform.rotation.z + "," + ndipointer.transform.rotation.w + ","
+			//+ ndipatient.transform.position.x + "," + ndipatient.transform.position.y + "," + ndipatient.transform.position.z + ","
+			//+ ndipatient.transform.rotation.x + "," + ndipatient.transform.rotation.y + "," + ndipatient.transform.rotation.z + "," + ndipatient.transform.rotation.w);
 		}
 	}
 
@@ -110,27 +103,29 @@ public class RecordData : MonoBehaviour
 		// TODO: fix the file name to include the .csv extension in the name from the config file
         string fileName = Config.Instance.configFile.unityConfig.registration.recordedData + time + ".csv";
         dataFilePath = System.IO.Path.Combine(Config.Instance.RegistrationFolderOut, fileName);
-        csvWriter = new StreamWriter(dataFilePath);
 
-        csvWriter.WriteLine("e_drill_p_x" + "," + "e_drill_p_y" + "," + "e_drill_p_z" + ","
-            + "e_drill_o_x" + "," + "e_drill_o_y" + "," + "e_drill_o_z" + ","
-            + "e_plan_p_x" + "," + "e_plan_p_y" + "," + "e_plan_p_z" + ","
-            + "e_plan_o_x" + "," + "e_plan_o_y" + "," + "e_plan_o_z" + ","
-			+ "timestamp" + "," + "isNDIcameraMoving" + "," + "angle_drill_plan_e" + ","
-            + "s_drill_p_x" + "," + "s_drill_p_y" + "," + "s_drill_p_z" + ","
-            + "s_plan_p_x" + "," + "s_plan_p_y" + "," + "s_plan_p_z" + ","
-            + "tipToEntryDist" + "," + "tipToExitDist" + "," + "tipToAxisDist" + ","
-            + "traj_counter" + "," + "drill_index" + "," + "startedInsertion" + ","
-			+ "hl2_pointer_p_x" + "," + "hl2_pointer_p_y" + "," + "hl2_pointer_p_z" + ","
-			+ "hl2_pointer_o_x" + "," + "hl2_pointer_o_y" + "," + "hl2_pointer_o_z" + "," + "hl2_pointer_o_w" + ","
-			+ "hl2_patient_p_x" + "," + "hl2_patient_p_y" + "," + "hl2_patient_p_z" + ","
-			+ "hl2_patient_o_x" + "," + "hl2_patient_o_y" + "," + "hl2_patient_o_z" + "," + "hl2_patient_o_w" + ","
-			+ "ndi_pointer_p_x" + "," + "ndi_pointer_p_y" + "," + "ndi_pointer_p_z" + ","
-			+ "ndi_pointer_o_x" + "," + "ndi_pointer_o_y" + "," + "ndi_pointer_o_z" + "," + "ndi_pointer_o_w" + ","
-			+ "ndi_patient_p_x" + "," + "ndi_patient_p_y" + "," + "ndi_patient_p_z" + ","
-			+ "ndi_patient_o_x" + "," + "ndi_patient_o_y" + "," + "ndi_patient_o_z" + "," + "ndi_patient_o_w");
+        // Recording markers poses can be used for experimentation and validation
+        //csvWriter = new StreamWriter(dataFilePath);
 
-		if (Config.Instance.IsVuforiaTrackingActive)
+        //csvWriter.WriteLine("e_drill_p_x" + "," + "e_drill_p_y" + "," + "e_drill_p_z" + ","
+        //	+ "e_drill_o_x" + "," + "e_drill_o_y" + "," + "e_drill_o_z" + ","
+        //	+ "e_plan_p_x" + "," + "e_plan_p_y" + "," + "e_plan_p_z" + ","
+        //	+ "e_plan_o_x" + "," + "e_plan_o_y" + "," + "e_plan_o_z" + ","
+        //	+ "timestamp" + "," + "isNDIcameraMoving" + "," + "angle_drill_plan_e" + ","
+        //	+ "s_drill_p_x" + "," + "s_drill_p_y" + "," + "s_drill_p_z" + ","
+        //	+ "s_plan_p_x" + "," + "s_plan_p_y" + "," + "s_plan_p_z" + ","
+        //	+ "tipToEntryDist" + "," + "tipToExitDist" + "," + "tipToAxisDist" + ","
+        //	+ "traj_counter" + "," + "drill_index" + "," + "startedInsertion" + ","
+        //	+ "hl2_pointer_p_x" + "," + "hl2_pointer_p_y" + "," + "hl2_pointer_p_z" + ","
+        //	+ "hl2_pointer_o_x" + "," + "hl2_pointer_o_y" + "," + "hl2_pointer_o_z" + "," + "hl2_pointer_o_w" + ","
+        //	+ "hl2_patient_p_x" + "," + "hl2_patient_p_y" + "," + "hl2_patient_p_z" + ","
+        //	+ "hl2_patient_o_x" + "," + "hl2_patient_o_y" + "," + "hl2_patient_o_z" + "," + "hl2_patient_o_w" + ","
+        //	+ "ndi_pointer_p_x" + "," + "ndi_pointer_p_y" + "," + "ndi_pointer_p_z" + ","
+        //	+ "ndi_pointer_o_x" + "," + "ndi_pointer_o_y" + "," + "ndi_pointer_o_z" + "," + "ndi_pointer_o_w" + ","
+        //	+ "ndi_patient_p_x" + "," + "ndi_patient_p_y" + "," + "ndi_patient_p_z" + ","
+        //	+ "ndi_patient_o_x" + "," + "ndi_patient_o_y" + "," + "ndi_patient_o_z" + "," + "ndi_patient_o_w");
+
+        if (Config.Instance.IsVuforiaTrackingActive)
 		{
 			trackingModeActive = "Vuforia";
 		}
@@ -145,7 +140,7 @@ public class RecordData : MonoBehaviour
         startRecording = true;
         distanceFeedbackMenu.SetActive(true);
         distanceFeedbackMenu.transform.parent = hl2pointer.transform;
-		distanceFeedbackMenu.transform.localPosition = new Vector3(-0.0140f, 0, 0.0145f);
+		distanceFeedbackMenu.transform.localPosition = Config.Instance.configFile.unityConfig.patientModel.distFeedbackMenuPosition;
 
 		if (Config.Instance.configFile.unityConfig.rotateDistanceMenu)
 			distanceFeedbackMenu.transform.localRotation = Quaternion.Euler(90, 0, 90);
@@ -192,21 +187,8 @@ public class RecordData : MonoBehaviour
 		string entryGoName = "entry_" + planningEndPoint.name.Substring(5);
 		UnityEngine.Debug.Log("entry:" + entryGoName);
 		planningEntryPoint = GameObject.Find(entryGoName);
-
-		//foreach (Transform child in plan.transform)
-		//{
-		//	if (child.name == "entryPoint")
-		//	{
-		//		planningEntryPoint = child.gameObject;
-		//	}
-		//	else if (child.name == "endPoint")
-		//	{
-		//		planningEntryPoint = child.gameObject;
-		//	}
-		//}
 	}
 
-	// figure out how to assing the drill gameobject
 	void AssignDrill()
 	{
 		string filePath = System.IO.Path.Combine(Config.Instance.RegistrationFolderOut, "tooltipTransform.txt");
@@ -271,17 +253,6 @@ public class RecordData : MonoBehaviour
 		csvWriter.Close();
 	}
 
-	// to be called from the NDIConnection.cs script when the message of collecting data is received
-	public void InsertionBegin()
-	{
-		insertionStatus = true;
-	}
-
-	public void InsertionFinish()
-	{
-		insertionStatus = false;
-	}
-
 	public void CloseDataWriter()
     {
 		startRecording = false;
@@ -305,13 +276,8 @@ public class RecordData : MonoBehaviour
 		Vector3 vectorAP = drillEndPoint - planEntryPoint;
 		Vector3 vectorAB = planEndPoint - planEntryPoint;
 
-		// Calculate the cross product of vectorAP and vectorAB
 		Vector3 crossProduct = Vector3.Cross(vectorAP, vectorAB);
-
-		// Calculate the magnitude of vectorAB
 		float magnitudeAB = vectorAB.magnitude;
-
-		// Calculate the distance using the formula
 		float distance = crossProduct.magnitude / magnitudeAB;
 
 		return distance;

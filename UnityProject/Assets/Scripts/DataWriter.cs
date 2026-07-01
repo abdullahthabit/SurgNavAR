@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
+// Helper class to save experiments calibraiton tooltip
 public class DataWriter : MonoBehaviour
 {
     public static void WriteToolCalibrationDataToCSV(string toolName, List<Matrix4x4> toolCalibrationPoses)

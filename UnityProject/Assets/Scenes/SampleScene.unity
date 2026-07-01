@@ -11202,7 +11202,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &251529456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11293,7 +11293,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 162.5, y: 13.8}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &253011460
 GameObject:
@@ -23475,10 +23475,10 @@ RectTransform:
   - {fileID: 971281891}
   m_Father: {fileID: 1023556985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 16, y: -15.999994}
+  m_SizeDelta: {x: 12, y: 31.999989}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &542435095
 MonoBehaviour:
@@ -51128,7 +51128,7 @@ MonoBehaviour:
       m_Calls: []
   facingCameraTrackingThreshold: 50
   requireFlatHand: 1
-  flatHandThreshold: 20
+  flatHandThreshold: 45
   followHandUntilFacingCamera: 1
   followHandCameraFacingThresholdAngle: 50
   useGazeActivation: 1
@@ -52656,9 +52656,9 @@ RectTransform:
   - {fileID: 1995526585}
   m_Father: {fileID: 251529460}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 20, y: -20}
   m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1220817928
@@ -56175,7 +56175,7 @@ MonoBehaviour:
       m_Calls: []
   facingCameraTrackingThreshold: 50
   requireFlatHand: 1
-  flatHandThreshold: 20
+  flatHandThreshold: 45
   followHandUntilFacingCamera: 1
   followHandCameraFacingThresholdAngle: 50
   useGazeActivation: 1
@@ -87124,10 +87124,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  onLastHandLost:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1544252527}
+      - m_Target: {fileID: 251529455}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -87138,6 +87135,33 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+  onLastHandLost:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 251529455}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2041100088}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: SetTrigger
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: IsPlaced
+          m_BoolArgument: 1
         m_CallState: 2
   onHandActivate:
     m_PersistentCalls:
@@ -94051,7 +94075,7 @@ MonoBehaviour:
       m_Calls: []
   facingCameraTrackingThreshold: 50
   requireFlatHand: 1
-  flatHandThreshold: 20
+  flatHandThreshold: 45
   followHandUntilFacingCamera: 1
   followHandCameraFacingThresholdAngle: 50
   useGazeActivation: 1

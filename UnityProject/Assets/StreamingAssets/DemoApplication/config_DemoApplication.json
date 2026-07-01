@@ -24,9 +24,9 @@
       ],
       // numerical navigation feedback menu (position in relation to the pointer marker)
       "distFeedbackMenuPosition": {
-        "x": -0.0140,
+        "x": 0,
         "y": 0,
-        "z": 0.0145
+        "z": 0
       },
       // preoperative navigation trajectories (such as in needle insertion applications)
       "preopPlans": [
